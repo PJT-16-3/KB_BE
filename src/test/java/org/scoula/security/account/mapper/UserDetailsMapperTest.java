@@ -22,7 +22,7 @@ public class UserDetailsMapperTest {
 
     @Test
     public void get() {
-        MemberDTO member=mapper.get("du123kim@naver.com");
+        MemberDTO member=mapper.get("admin");
         log.info(member);
         for(AuthDTO auth : member.getAuthList()) {
             log.info(auth);
