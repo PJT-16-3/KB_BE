@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.scoula.mapper.GaScoreMapper">
+
+    <update id="updateScore">
+        UPDATE user_info
+        SET
+            no_house_period = #{gaScoreDTO.noHousePeriod},
+            dependents_nm = #{gaScoreDTO.dependentsNm},
+            no_house_score = #{gaScoreDTO.noHouseScore},
+            dependentes_score = #{gaScoreDTO.dependentsScore},
+            payment_period = #{gaScoreDTO.paymentPeriod}
+        WHERE users_idx = #{userIdx}
+    </update>
+
+    <select id="getScoresByUserIdx" resultType="org.scoula.dto.GaScoreDTO">
+        SELECT
+            no_house_score AS noHouseScore,
+            dependentes_score AS dependentsScore,
+            payment_period AS paymentPeriod
+        FROM user_info
+        WHERE users_idx = #{userIdx}
+    </select>
+
+</mapper>

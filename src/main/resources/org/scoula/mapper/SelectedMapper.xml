@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.scoula.mapper.SelectedMapper">
+
+    <update id="updateHomePrice">
+        UPDATE user_info
+        SET hope_min_price = #{homePrice.hopeMinPrice},
+            hope_max_price = #{homePrice.hopeMaxPrice}
+        WHERE users_idx = #{userIdx}
+    </update>
+
+    <delete id="deleteSelectedRegion">
+        DELETE FROM selected_region WHERE user_info_idx = #{userInfoIdx}
+    </delete>
+
+    <delete id="deleteSelectedHomeSize">
+        DELETE FROM selected_homesize WHERE user_info_idx = #{userInfoIdx}
+    </delete>
+
+    <delete id="deleteSelectedHomeType">
+        DELETE FROM selected_hometype WHERE user_info_idx = #{userInfoIdx}
+    </delete>
+
+    <insert id="insertSelectedRegion">
+        INSERT INTO selected_region (user_info_idx, si, gun_gu)
+        VALUES (#{userIdx}, #{region.si}, #{region.gunGu})
+    </insert>
+
+    <insert id="insertSelectedHomeSize">
+        INSERT INTO selected_homesize (user_info_idx, min_homesize, max_homesize)
+        VALUES (#{userIdx}, #{homesize.minHomesize}, #{homesize.maxHomesize})
+    </insert>
+
+    <insert id="insertSelectedHomeType">
+        INSERT INTO selected_hometype (user_info_idx, selected_house_secd)
+        VALUES (#{userIdx}, #{hometype.selectedHouseSecd})
+    </insert>
+
+    <select id="selectHomePriceByUserIdx" resultType="org.scoula.dto.HomePriceDTO">
+        SELECT hope_min_price AS hopeMinPrice,
+               hope_max_price AS hopeMaxPrice
+        FROM user_info
+        WHERE users_idx = #{userIdx}
+    </select>
+
+    <select id="findUserInfoIdxByUserIdx" resultType="int">
+        SELECT user_info_idx FROM user_info WHERE users_idx = #{userIdx}
+    </select>
+
+    <select id="selectSelectedRegion" resultType="org.scoula.dto.RegionDTO">
+        SELECT si, gun_gu FROM selected_region WHERE user_info_idx = #{userInfoIdx}
+    </select>
+
+    <select id="selectSelectedHomesize" resultType="org.scoula.dto.HomeSizeDTO">
+        SELECT min_homesize AS minHomesize, max_homesize AS maxHomesize
+        FROM selected_homesize WHERE user_info_idx = #{userInfoIdx}
+    </select>
+
+    <select id="selectSelectedHometype" resultType="org.scoula.dto.HomeTypeDTO">
+        SELECT selected_house_secd AS selectedHouseSecd
+        FROM selected_hometype WHERE user_info_idx = #{userInfoIdx}
+    </select>
+</mapper>

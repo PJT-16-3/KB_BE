@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.scoula.mapper.UserMapper">
+
+    <select id="findUserIdxByUserId" parameterType="String" resultType="int">
+        SELECT users_idx
+        FROM users
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="findById" parameterType="String" resultType="org.scoula.domain.User">
+        SELECT users_idx, user_id, user_name, password, address, jwt_refresh_token, kakao_user_id, birthdate
+        FROM users
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="findAll" resultType="org.scoula.domain.User">
+        SELECT users_idx, user_id, user_name, password, address, jwt_refresh_token, kakao_user_id, birthdate
+        FROM users
+    </select>
+
+    <select id="findByUsername" parameterType="string" resultType="org.scoula.domain.User">
+        SELECT users_idx, user_id, user_name, password, address, jwt_refresh_token, kakao_user_id, birthdate
+        FROM users
+        WHERE user_name = #{username}
+    </select>
+
+    <insert id="insertUser" parameterType="org.scoula.domain.User">
+        INSERT INTO users (user_id, user_name, password, address, jwt_refresh_token, kakao_user_id, birthdate)
+        VALUES (#{userId}, #{userName}, #{password}, #{address}, #{jwtRefreshToken}, #{kakaoUserId}, #{birthdate})
+    </insert>
+
+    <update id="updateUser" parameterType="org.scoula.domain.User">
+        UPDATE users
+        SET user_id = #{userId},
+            user_name = #{userName},
+            password = #{password},
+            address = #{address},
+            jwt_refresh_token = #{jwtRefreshToken},
+            kakao_user_id = #{kakaoUserId},
+            birthdate = #{birthdate}
+        WHERE users_idx = #{id}
+    </update>
+
+    <delete id="deleteUser" parameterType="long">
+        DELETE FROM users WHERE users_idx = #{id}
+    </delete>
+
+    <select id="countUserByIdx" parameterType="long" resultType="int">
+        SELECT COUNT(*) FROM users_auth WHERE user_idx = #{usersIdx}
+    </select>
+
+    <insert id="insertUserAuth" parameterType="long">
+        INSERT INTO users_auth (user_idx, auth) VALUES (#{usersIdx}, 'ROLE_MEMBER')
+    </insert>
+
+</mapper>

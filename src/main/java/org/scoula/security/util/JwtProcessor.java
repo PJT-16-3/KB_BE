@@ -3,6 +3,7 @@ package org.scoula.security.util;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +26,7 @@ public class JwtProcessor {
                 .setSubject(subject)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(new Date().getTime()+ACCESS_TOKEN_VALID_MILLISECOND))
-                .signWith(key)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -59,18 +60,5 @@ public class JwtProcessor {
                 .parseClaimsJws(token);
         return true;
     }
-
-    //토큰 유효기간 확인
-    public boolean isTokenExpired(String token) {
-        Date expiration = Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getExpiration();
-        return expiration.before(new Date());
-    }
-
-
 
 }

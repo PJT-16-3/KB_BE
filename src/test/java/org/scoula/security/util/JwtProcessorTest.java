@@ -71,29 +71,5 @@ class JwtProcessorTest {
         System.out.println("refreshTokenValid: " + refreshTokenValid);
     }
 
-    @Test
-    void isTokenExpired() throws InterruptedException {
-        // 짧은 생명주기 2초 로 생성
-        String username = "test@email.com";
-        String secretKey = "충분히 긴 임의의(랜덤한) 비밀키 문자열 배정";
-        Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
-        JwtProcessor shortLivedProcessor = new JwtProcessor() {
-            @Override
-            public String generateAccessToken(String subject) {
-                return Jwts.builder()
-                        .setSubject(subject)
-                        .setIssuedAt(new Date())
-                        .setExpiration(new Date(System.currentTimeMillis() + 1000)) // 1초
-                        .signWith(key)
-                        .compact();
-            }
-        };
 
-        String shortAccessToken = shortLivedProcessor.generateAccessToken(username);
-        // 바로 만료 안 됨
-        assertFalse(shortLivedProcessor.isTokenExpired(shortAccessToken), "토큰이 아직 만료되지 않아야 함");
-        // 2초 대기 후 만료 체크
-        Thread.sleep(2000); // 2초 대기
-        assertTrue(shortLivedProcessor.isTokenExpired(shortAccessToken), "토큰이 만료되어야 함");
-    }
 }

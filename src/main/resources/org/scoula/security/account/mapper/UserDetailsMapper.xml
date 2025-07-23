@@ -2,23 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.scoula.security.account.mapper.UserDetailsMapper">
 
+    <!-- 권한 정보 매핑 -->
     <resultMap id="authMap" type="AuthDTO">
-        <result property="username" column="username" />
-        <result property="auth" column="auth" />
+        <result property="auth" column="auth"/>
     </resultMap>
 
+    <!-- 회원 정보 매핑 -->
     <resultMap id="memberMap" type="MemberDTO">
         <id property="userId" column="user_id"/>
-        <result property="userName" column="user_name"/>
+        <result property="user_name" column="user_name"/>
         <result property="password" column="password"/>
-        <result property="email" column="email"/>
-        <result property="birthdate" column="birthdate"/>
-        <result property="regDate" column="reg_date"/>
-        <result property="updateDate" column="update_date"/>
+        <result property="address" column="address"/>
         <result property="jwtRefreshToken" column="jwt_refresh_token"/>
-        <collection property="authList" resultMap="authMap" />
+        <result property="birthdate" column="birthdate"/>
+        <collection property="authList" resultMap="authMap"/>
     </resultMap>
-
 
     <select id="get" resultMap="memberMap">
         SELECT
@@ -26,13 +24,11 @@
             u.user_name,
             u.password,
             u.birthdate,
-            u.jwt_refresh_token,
-            a.username,
             a.auth
         FROM users u
                  LEFT OUTER JOIN users_auth a
-                                 ON u.user_id = a.username
-        WHERE u.user_id = 'admin';
+                                 ON u.users_idx = a.user_idx
+        WHERE u.user_id = #{user_id};
 
     </select>
 
