@@ -17,7 +17,7 @@
             gnrl_rnk2_etc_area_endde, przwner_presnatn_de, cntrct_cncls_bgnde,
             cntrct_cncls_endde, hmpg_adres, cnstrct_entrps_nm, mdhs_telno,
             bsns_mby_nm, mvn_prearnge_ym, speclt_rdn_earth_at, mdat_trget_area_secd,
-            parcprc_uls_at, pblanc_url
+            parcprc_uls_at, pblanc_url,si,sigungu
         ) VALUES (
                      #{houseManageNo}, #{pblancNo}, #{houseNm}, #{houseSecd}, #{houseSecdNm},
                      #{houseDtlSecd}, #{houseDtlSecdNm}, #{rentSecd}, #{rentSecdNm},
@@ -29,7 +29,9 @@
                      #{gnrlRnk2EtcAreaEndde}, #{przwnerPresnatnDe}, #{cntrctCnclsBgnde},
                      #{cntrctCnclsEndde}, #{hmpgAdres}, #{cnstrctEntrpsNm}, #{mdhsTelno},
                      #{bsnsMbyNm}, #{mvnPrearngeYm}, #{specltRdnEarthAt}, #{mdatTrgetAreaSecd},
-                     #{parcprcUlsAt}, #{pblancUrl}
+                     #{parcprcUlsAt}, #{pblancUrl},
+                    SUBSTRING_INDEX(#{hssplyAdres}, ' ', 1),
+                     SUBSTRING_INDEX(SUBSTRING_INDEX(#{hssplyAdres}, ' ', 2), ' ', -1)
                  )
             ON DUPLICATE KEY UPDATE
                                  house_nm = VALUES(house_nm),
@@ -67,7 +69,7 @@
             search_house_secd,
             subscrpt_area_code,
             subscrpt_area_code_nm,
-            hssply_hshldco,
+            hssply_adres,
             tot_suply_hshldco,
             rcrit_pblanc_de,
             subscrpt_rcept_bgnde,
@@ -79,7 +81,9 @@
             bsns_mby_nm,
             mdhs_telno,
             mvn_prearnge_ym,
-            pblanc_url
+            pblanc_url,
+            si,
+            sigungu
         ) VALUES (
                      #{houseManageNo},
                      #{pblancNo},
@@ -91,7 +95,7 @@
                      #{searchHouseSecd},
                      #{subscrptAreaCode},
                      #{subscrptAreaCodeNm},
-                     #{hssplyHshldco},
+                     #{hssplyAdres},
                      #{totSuplyHshldco},
                      #{rcritPblancDe},
                      #{rceptBgnde},
@@ -103,7 +107,9 @@
                      #{bsnsMbyNm},
                      #{mdhsTelno},
                      #{mvnPrearngeYm},
-                     #{pblancUrl}
+                     #{pblancUrl},
+                     SUBSTRING_INDEX(#{hssplyAdres}, ' ', 1),
+                     SUBSTRING_INDEX(SUBSTRING_INDEX(#{hssplyAdres}, ' ', 2), ' ', -1)
                  )
         ON DUPLICATE KEY UPDATE
                              house_nm = VALUES(house_nm),
@@ -114,8 +120,10 @@
                              cntrct_cncls_endde = VALUES(cntrct_cncls_endde),
                              hmpg_adres = VALUES(hmpg_adres),
                              bsns_mby_nm = VALUES(bsns_mby_nm),
-                             pblanc_url = VALUES(pblanc_url);
+                             pblanc_url = VALUES(pblanc_url),
+                             hssply_adres = VALUES(hssply_adres);
     </insert>
+
 
     <delete id="deleteOld" parameterType="java.time.LocalDate">
         DELETE FROM apt_table
@@ -132,6 +140,122 @@
         SELECT officetel_idx, house_manage_no
         FROM officetel_table
     </select>
+
+    <resultMap id="aptTypeMap" type="org.scoula.dto.AptTypeDTO">
+        <result property="houseTy" column="house_ty"/>
+        <result property="suplyAr" column="suply_ar"/>
+        <result property="suplyHshldco" column="suply_hshldco"/>
+        <result property="spsplyHshldco" column="spsply_hshldco"/>
+        <result property="lttotTopAmount" column="lttot_top_amount"/>
+    </resultMap>
+
+    <resultMap id="aptDetailMap" type="org.scoula.dto.AptDetailDTO">
+
+        <id property="pblancNo" column="pblanc_no"/>
+        <result property="aptIdx" column="apt_idx"/>
+        <result property="favoriteCount" column="favorite_count"/>
+        <result property="viewCount" column="view_count"/>
+        <result property="houseManageNo" column="house_manage_no"/>
+        <result property="houseNm" column="house_nm"/>
+        <result property="houseSecd" column="house_secd"/>
+        <result property="houseSecdNm" column="house_secd_nm"/>
+        <result property="houseDtlSecd" column="house_dtl_secd"/>
+        <result property="houseDtlSecdNm" column="house_dtl_secd_nm"/>
+        <result property="rentSecd" column="rent_secd"/>
+        <result property="rentSecdNm" column="rent_secd_nm"/>
+        <result property="subscrptAreaCode" column="subscrpt_area_code"/>
+        <result property="subscrptAreaCodeNm" column="subscrpt_area_code_nm"/>
+        <result property="hssplyAdres" column="hssply_adres"/>
+        <result property="totSuplyHshldco" column="tot_suply_hshldco"/>
+        <result property="rcritPblancDe" column="rcrit_pblanc_de"/>
+        <result property="rceptBgnde" column="rcept_bgnde"/>
+        <result property="rceptEndde" column="rcept_endde"/>
+        <result property="spsplyRceptBgnde" column="spsply_rcept_bgnde"/>
+        <result property="spsplyRceptEndde" column="spsply_rcept_endde"/>
+        <result property="gnrlRnk1CrspareaRcptde" column="gnrl_rnk1_crsparea_rcptde"/>
+        <result property="gnrlRnk1CrspareaEndde" column="gnrl_rnk1_crsparea_endde"/>
+        <result property="gnrlRnk1EtcAreaRcptde" column="gnrl_rnk1_etc_area_rcptde"/>
+        <result property="gnrlRnk1EtcAreaEndde" column="gnrl_rnk1_etc_area_endde"/>
+        <result property="gnrlRnk2CrspareaRcptde" column="gnrl_rnk2_crsparea_rcptde"/>
+        <result property="gnrlRnk2CrspareaEndde" column="gnrl_rnk2_crsparea_endde"/>
+        <result property="gnrlRnk2EtcAreaRcptde" column="gnrl_rnk2_etc_area_rcptde"/>
+        <result property="gnrlRnk2EtcAreaEndde" column="gnrl_rnk2_etc_area_endde"/>
+        <result property="przwnerPresnatnDe" column="przwner_presnatn_de"/>
+        <result property="cntrctCnclsBgnde" column="cntrct_cncls_bgnde"/>
+        <result property="cntrctCnclsEndde" column="cntrct_cncls_endde"/>
+        <result property="hmpgAdres" column="hmpg_adres"/>
+        <result property="cnstrctEntrpsNm" column="cnstrct_entrps_nm"/>
+        <result property="mdhsTelno" column="mdhs_telno"/>
+        <result property="bsnsMbyNm" column="bsns_mby_nm"/>
+        <result property="mvnPrearngeYm" column="mvn_prearnge_ym"/>
+        <result property="specltRdnEarthAt" column="speclt_rdn_earth_at"/>
+        <result property="mdatTrgetAreaSecd" column="mdat_trget_area_secd"/>
+        <result property="parcprcUlsAt" column="parcprc_uls_at"/>
+        <result property="pblancUrl" column="pblanc_url"/>
+        <collection property="aptType" resultMap="aptTypeMap"/>
+    </resultMap>
+
+    <update id="incrementAptViewCount">
+        UPDATE apt_table
+        SET view_count = view_count + 1
+        WHERE pblanc_no = #{pblancNo}
+    </update>
+
+
+    <select id="getAptDetails" resultMap="aptDetailMap">
+        SELECT
+            a.apt_idx,
+            a.house_manage_no,
+            a.pblanc_no,
+            a.house_nm,
+            a.house_secd,
+            a.house_secd_nm,
+            a.house_dtl_secd,
+            a.house_dtl_secd_nm,
+            a.rent_secd,
+            a.rent_secd_nm,
+            a.subscrpt_area_code,
+            a.subscrpt_area_code_nm,
+            a.hssply_adres,
+            a.tot_suply_hshldco,
+            a.rcrit_pblanc_de,
+            a.rcept_bgnde,
+            a.rcept_endde,
+            a.spsply_rcept_bgnde,
+            a.spsply_rcept_endde,
+            a.gnrl_rnk1_crsparea_rcptde,
+            a.gnrl_rnk1_crsparea_endde,
+            a.gnrl_rnk1_etc_area_rcptde,
+            a.gnrl_rnk1_etc_area_endde,
+            a.gnrl_rnk2_crsparea_rcptde,
+            a.gnrl_rnk2_crsparea_endde,
+            a.gnrl_rnk2_etc_area_rcptde,
+            a.gnrl_rnk2_etc_area_endde,
+            a.przwner_presnatn_de,
+            a.cntrct_cncls_bgnde,
+            a.cntrct_cncls_endde,
+            a.hmpg_adres,
+            a.cnstrct_entrps_nm,
+            a.mdhs_telno,
+            a.bsns_mby_nm,
+            a.mvn_prearnge_ym,
+            a.speclt_rdn_earth_at,
+            a.mdat_trget_area_secd,
+            a.parcprc_uls_at,
+            a.pblanc_url,
+            a.view_count,
+            (SELECT COUNT(*) FROM user_favorite uf WHERE uf.apt_pblanc = a.pblanc_no) AS favorite_count,
+            t.house_ty,
+            t.suply_ar,
+            t.suply_hshldco,
+            t.spsply_hshldco,
+            t.lttot_top_amount
+
+        FROM apt_table a
+                 LEFT JOIN apt_type t ON a.apt_idx = t.apt_idx
+        WHERE a.pblanc_no = #{pblancNo}
+    </select>
+
 
     <insert id="insertOfficetelType">
         INSERT INTO officetel_type (
@@ -162,6 +286,11 @@
                              subscrpt_reqst_amount = VALUES(subscrpt_reqst_amount),
                              tp = VALUES(tp);
     </insert>
+    <update id="incrementOfficetelViewCount">
+        UPDATE officetel_table
+        SET view_count = view_count + 1
+        WHERE pblanc_no = #{pblancNo}
+    </update>
 
 
     <delete id="deleteOldFromOfficetel" parameterType="java.time.LocalDate">
@@ -170,6 +299,134 @@
     </delete>
 
 
+    <resultMap id="officetelTypeMap" type="org.scoula.dto.OfficetelTypeDTO">
+        <result property="modelNo" column="model_no"/>
+        <result property="tp" column="tp"/>
+        <result property="excluseAr" column="excluse_ar"/>
+        <result property="suplyHshldco" column="suply_hshldco"/>
+        <result property="suplyAmount" column="suply_amount"/>
+        <result property="subscrptReqstAmount" column="subscrpt_reqst_amount"/>
+        <result property="houseManageNo" column="house_manage_no"/>
+        <result property="pblancNo" column="pblanc_no"/>
+    </resultMap>
+
+
+    <resultMap id="officetelDetailMap" type="org.scoula.dto.OfficetelDetailDTO">
+        <id property="pblancNo" column="pblanc_no"/>
+        <result property="favoriteCount" column="favorite_count"/>
+        <result property="viewCount" column="view_count"/>
+        <result property="houseManageNo" column="house_manage_no"/>
+        <result property="houseNm" column="house_nm"/>
+        <result property="houseSecd" column="house_secd"/>
+        <result property="houseSecdNm" column="house_secd_nm"/>
+        <result property="houseDtlSecd" column="house_dtl_secd"/>
+        <result property="houseDtlSecdNm" column="house_dtl_secd_nm"/>
+        <result property="searchHouseSecd" column="search_house_secd"/>
+        <result property="subscrptAreaCode" column="subscrpt_area_code"/>
+        <result property="subscrptAreaCodeNm" column="subscrpt_area_code_nm"/>
+        <result property="hssplyAdres" column="hssply_adres"/>
+        <result property="totSuplyHshldco" column="tot_suply_hshldco"/>
+        <result property="rcritPblancDe" column="rcrit_pblanc_de"/>
+        <result property="rceptBgnde" column="rcept_bgnde"/>
+        <result property="rceptEndde" column="rcept_endde"/>
+        <result property="przwnerPresnatnDe" column="przwner_presnatn_de"/>
+        <result property="cntrctCnclsBgnde" column="cntrct_cncls_bgnde"/>
+        <result property="cntrctCnclsEndde" column="cntrct_cncls_endde"/>
+        <result property="hmpgAdres" column="hmpg_adres"/>
+        <result property="bsnsMbyNm" column="bsns_mby_nm"/>
+        <result property="mdhsTelno" column="mdhs_telno"/>
+        <result property="mvnPrearngeYm" column="mvn_prearnge_ym"/>
+        <result property="pblancUrl" column="pblanc_url"/>
+        <collection property="officetelType" resultMap="officetelTypeMap"/>
+    </resultMap>
+
+    <select id="getOfficetelDetails" resultMap="officetelDetailMap">
+        SELECT
+            ot.view_count,
+            ot.house_manage_no,
+            ot.pblanc_no,
+            ot.house_nm,
+            ot.house_secd,
+            ot.house_secd_nm,
+            ot.house_dtl_secd,
+            ot.house_dtl_secd_nm,
+            ot.search_house_secd,
+            ot.subscrpt_area_code,
+            ot.subscrpt_area_code_nm,
+            ot.hssply_adres,
+            ot.tot_suply_hshldco,
+            ot.rcrit_pblanc_de,
+            ot.subscrpt_rcept_bgnde ,
+            ot.subscrpt_rcept_endde,
+            ot.przwner_presnatn_de,
+            ot.cntrct_cncls_bgnde,
+            ot.cntrct_cncls_endde,
+            ot.hmpg_adres,
+            ot.bsns_mby_nm,
+            ot.mdhs_telno,
+            ot.mvn_prearnge_ym,
+            ot.pblanc_url,
+            ott.model_no,
+            ott.tp,
+            ott.excluse_ar,
+            ott.suply_hshldco,
+            ott.suply_amount,
+            ott.subscrpt_reqst_amount,
+            ott.house_manage_no ,
+            ott.pblanc_no,
+        (SELECT COUNT(*) FROM user_favorite uf WHERE uf.office_pblanc = ot.pblanc_no) AS favorite_count
+
+        FROM officetel_table ot
+                 LEFT JOIN officetel_type ott
+                           ON ot.officetel_idx = ott.officetel_idx
+        WHERE ot.pblanc_no = #{pblancNo}
+    </select>
+
+    <select id="findAllAptLocations" resultType="org.scoula.dto.AptDTO">
+        SELECT
+            apt_idx AS aptIdx,
+            latitude,
+            longitude
+        FROM apt_table
+        WHERE latitude IS NOT NULL
+          AND longitude IS NOT NULL
+    </select>
+    <select id="findAptIdxByPblancNo" resultType="java.lang.Integer">
+        SELECT apt_idx
+        FROM apt_table
+        WHERE pblanc_no = #{pblancNo}
+    </select>
+
+    <select id="getInfraPlace" resultType="org.scoula.dto.InfraPlaceDTO">
+        SELECT place_type, place_idx, place_name, distance, road_address_name
+        FROM vw_infra_places WHERE apt_idx = #{aptIdx}
+    </select>
+
+    <select id="getOfficetelInfraPlace" resultType="org.scoula.dto.InfraPlaceDTO">
+        SELECT place_type, place_idx, place_name, distance, road_address_name
+        FROM vw_infra_places WHERE officetel_idx = #{officetelIdx}
+    </select>
+
+
+    <select id="findOfficetelIdxByPblancNo" resultType="java.lang.Integer">
+        SELECT officetel_idx
+        FROM officetel_table
+        WHERE pblanc_no = #{pblancNo}
+    </select>
+
+    <select id="findAllOfficetelLocations" resultType="org.scoula.dto.OfficetelDTO">
+        SELECT
+            officetel_idx AS officetelIdx,
+            latitude,
+            longitude
+        FROM officetel_table
+        WHERE latitude IS NOT NULL
+          AND longitude IS NOT NULL
+    </select>
+    <select id="countFavoritesByPblancNo" resultType="int">
+        SELECT COUNT(*) FROM user_favorite
+        WHERE apt_pblanc = #{pblancNo}
+    </select>
 
 
 </mapper>

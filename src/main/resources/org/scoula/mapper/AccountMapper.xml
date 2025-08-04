@@ -5,46 +5,70 @@
 
 <mapper namespace="org.scoula.mapper.AccountMapper">
 
-    <insert id="insertChungyakAccount">
+    <insert id="insertChungyakAccount" parameterType="map">
         INSERT INTO account (
+            user_idx,
             res_account,
             res_account_display,
             res_account_balance,
             res_account_start_date,
             res_account_name,
             bank_name,
-            user_idx,
+            res_final_round_no,
+            res_account_tr_date,
             is_payment
         )
         VALUES (
+                   #{userIdx},
                    #{dto.resAccount},
                    #{dto.accountDisplay},
                    #{dto.accountBalance},
                    #{dto.accountStartDate},
                    #{dto.resAccountName},
                    #{dto.bankName},
-                   #{userIdx},
+                   #{dto.resFinalRoundNo},
+                   #{dto.resAccountTrDate},
                    #{isPayment}
                )
+        ON DUPLICATE KEY UPDATE
+                             res_account = VALUES(res_account),
+                             res_account_display = VALUES(res_account_display),
+                             res_account_balance = VALUES(res_account_balance),
+                             res_account_start_date = VALUES(res_account_start_date),
+                             res_account_name = VALUES(res_account_name),
+                             bank_name = VALUES(bank_name),
+                             res_final_round_no = VALUES(res_final_round_no),
+                             res_account_tr_date = VALUES(res_account_tr_date),
+                             is_payment = VALUES(is_payment);
     </insert>
 
-    <select id="findAccountsByUserIdx" resultType="org.scoula.dto.ChungyakAccountDTO">
+
+
+    <select id="findAccountByUserIdx" parameterType="int" resultType="org.scoula.dto.ChungyakAccountDTO">
         SELECT
             res_account AS resAccount,
             res_account_display AS accountDisplay,
             res_account_balance AS accountBalance,
             res_account_start_date AS accountStartDate,
             res_account_name AS resAccountName,
-            bank_name AS bankName
+            bank_name AS bankName,
+            res_final_round_no AS resFinalRoundNo,
+            res_account_tr_date AS resAccountTrDate,
+            is_payment AS isPayment
         FROM account
         WHERE user_idx = #{userIdx}
-
+        ORDER BY account_idx DESC
+        LIMIT 1
     </select>
 
-    <select id="findEarliestAccountStartDate" resultType="string">
-        SELECT MIN(res_account_start_date)
+    <select id="findAccountStartDate" parameterType="int" resultType="java.time.LocalDate">
+        SELECT res_account_start_date
         FROM account
         WHERE user_idx = #{userIdx}
     </select>
+
+    <delete id="deleteAccountByUserIdx">
+        DELETE FROM account WHERE user_idx = #{userIdx}
+    </delete>
 
 </mapper>

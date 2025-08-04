@@ -5,22 +5,85 @@
 
 <mapper namespace="org.scoula.mapper.GaScoreMapper">
 
-    <update id="updateScore">
-        UPDATE user_info
-        SET
-            no_house_period = #{gaScoreDTO.noHousePeriod},
-            dependents_nm = #{gaScoreDTO.dependentsNm},
-            no_house_score = #{gaScoreDTO.noHouseScore},
-            dependentes_score = #{gaScoreDTO.dependentsScore},
-            payment_period = #{gaScoreDTO.paymentPeriod}
-        WHERE users_idx = #{userIdx}
-    </update>
+    <resultMap id="GaScoreResultMap" type="org.scoula.dto.GaScoreDTO">
+        <result property="noHousePeriod" column="no_house_period"/>
+        <result property="noHouseScore" column="no_house_score"/>
+        <result property="dependentsNm" column="dependents_nm"/>
+        <result property="dependentsScore" column="dependents_score"/>
+        <result property="headOfHousehold" column="head_of_household"/>
+        <result property="houseOwner" column="house_owner"/>
+        <result property="houseDisposal" column="house_disposal"/>
+        <result property="disposalDate" column="disposal_date"/>
+        <result property="maritalStatus" column="marital_status"/>
+        <result property="weddingDate" column="wedding_date"/>
+        <result property="residenceStartDate" column="residence_start_date"/>
+        <result property="paymentPeriod" column="payment_period"/>
+        <result property="paymentPeriodScore" column="payment_period_score"/>
+        <result property="totalGaScore" column="total_ga_score"/>
+    </resultMap>
 
-    <select id="getScoresByUserIdx" resultType="org.scoula.dto.GaScoreDTO">
+    <insert id="insertGaScore">
+        INSERT INTO user_info (users_idx,
+                               no_house_period,
+                               no_house_score,
+                               dependents_nm,
+                               dependents_score,
+                               head_of_household,
+                               house_owner,
+                               house_disposal,
+                               disposal_date,
+                               marital_status,
+                               wedding_date,
+                               residence_start_date,
+                               payment_period,
+                               payment_period_score,
+                               total_ga_score)
+        VALUES (#{userIdx},
+                #{dto.noHousePeriod},
+                #{dto.noHouseScore},
+                #{dto.dependentsNm},
+                #{dto.dependentsScore},
+                #{dto.headOfHousehold},
+                #{dto.houseOwner},
+                #{dto.houseDisposal},
+                #{dto.disposalDate},
+                #{dto.maritalStatus},
+                #{dto.weddingDate},
+                #{dto.residenceStartDate},
+                #{dto.paymentPeriod},
+                #{dto.paymentPeriodScore},
+                #{dto.totalGaScore})
+        ON DUPLICATE KEY UPDATE no_house_period      = VALUES(no_house_period),
+                                no_house_score       = VALUES(no_house_score),
+                                dependents_nm        = VALUES(dependents_nm),
+                                dependents_score     = VALUES(dependents_score),
+                                head_of_household    = VALUES(head_of_household),
+                                house_owner          = VALUES(house_owner),
+                                house_disposal       = VALUES(house_disposal),
+                                disposal_date        = VALUES(disposal_date),
+                                marital_status       = VALUES(marital_status),
+                                wedding_date         = VALUES(wedding_date),
+                                residence_start_date = VALUES(residence_start_date),
+                                payment_period       = VALUES(payment_period),
+                                payment_period_score = VALUES(payment_period_score),
+                                total_ga_score       = VALUES(total_ga_score)
+    </insert>
+
+    <select id="findGaScoreByUserIdx" parameterType="int" resultMap="GaScoreResultMap">
         SELECT
-            no_house_score AS noHouseScore,
-            dependentes_score AS dependentsScore,
-            payment_period AS paymentPeriod
+            no_house_period,
+            no_house_score,
+            dependents_nm,
+            head_of_household,
+            house_owner,
+            house_disposal,
+            disposal_date,
+            marital_status,
+            wedding_date,
+            residence_start_date,
+            payment_period,
+            payment_period_score,
+            total_ga_score
         FROM user_info
         WHERE users_idx = #{userIdx}
     </select>

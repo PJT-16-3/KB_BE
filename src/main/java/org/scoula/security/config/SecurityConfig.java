@@ -65,17 +65,31 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOrigin("*");
+        // 와일드카드 + credentials 허용
+        config.addAllowedOriginPattern("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
 
+
     //jwt 관련
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/assets/**", "/*", "/v1/auth/refresh","/v1/auth/signup");
+        web.ignoring().antMatchers(
+                "/assets/**",
+                "/*",
+                "/v1/auth/refresh",
+                "/v1/auth/signup",
+
+                // Swagger 관련 경로 추가
+                "/v2/api-docs",
+                "/swagger-resources/**",
+                "/swagger-ui.html",
+                "/webjars/**",
+                "/swagger/**"
+        );
     }
 
     // 문자셋필터
@@ -90,15 +104,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()//경로별접근권한설정
-                .antMatchers(HttpMethod.OPTIONS).permitAll()
-                .antMatchers("/v1/account/**").permitAll()
-                .antMatchers("/v1/email/**").permitAll()
-                .antMatchers("/v1/auth/**").permitAll()
-                .antMatchers("/oauth/kakao/**").permitAll()
+                .antMatchers(HttpMethod.OPTIONS,"/**").permitAll()
+                .antMatchers("/v1/auth/refresh", "/v1/auth/signup","/v1/auth/resetpassword","/v1/email/**","/api/oauth/kakao/**").permitAll()
+
+                .antMatchers("/v1/auth/logout","/v1/auth/signout","/v1/auth/update").hasRole("MEMBER")
+                .antMatchers("/v1/account/**").hasRole("MEMBER")
+                .antMatchers("v1/me/**").hasRole("MEMBER")
+                .antMatchers("/v1/subscriptions/**").hasRole("MEMBER")
                 .anyRequest().authenticated(); //나머지는로그인된경우모두허용
 
 
         http
+                .addFilterBefore(corsFilter(),
+                        org.springframework.security.web.access.channel.ChannelProcessingFilter.class)
                 // 한글인코딩필터설정
                 .addFilterBefore(encodingFilter(), CsrfFilter.class)
                 //인증 에러 필터
@@ -123,16 +141,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth)
             throws Exception {
         log.info("configure .........................................");
-//        auth.inMemoryAuthentication()
-//                .withUser("admin")
-//                .password("{noop}1234")
-//                .password("$2a$10$LZPNr9RNYysU/eFm3Ej7guTjw18kR4y92IknxnWA1BNL3dkIc8jYC")
-//                .roles("ADMIN","MEMBER"); // ROLE_ADMIN
-//        auth.inMemoryAuthentication()
-//                .withUser("member")
-//                .password("{noop}1234")
-//                .password("$2a$10$PA5ouTzqbVX3y/MZ8tdcYugIv6IRk3/b9EqUOXIm4X/gXI562FG0e")
-//                .roles("MEMBER"); // ROLE_MEMBER
 
         auth
                 .userDetailsService(userDetailsService)

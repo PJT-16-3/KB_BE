@@ -4,43 +4,82 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.scoula.mapper.UserFavoriteMapper">
-
-    <!-- 즐겨찾기 추가 -->
     <insert id="insertUserFavorite" parameterType="org.scoula.dto.UserFavoriteDTO">
-        INSERT INTO user_favorite
-        (users_idx, apt_idx, offi_idx, predicted_win_rate, predicted_cutoff_score)
-        VALUES
-            (#{usersIdx}, #{aptIdx}, #{offiIdx}, NULL, NULL);
+        INSERT INTO user_favorite (
+            users_idx,
+            apt_pblanc,
+            office_pblanc,
+            predicted_win_rate,
+            predicted_cutoff_score
+        )
+        VALUES (
+                   #{usersIdx},
+                   #{aptPblanc},
+                   #{officePblanc},
+                   #{predictedWinRate},
+                   #{predictedCutoffScore}
+               )
     </insert>
 
 
-    <!-- 특정 사용자의 즐겨찾기 리스트 조회 -->
-    <select id="findFavoritesByUsersIdx" parameterType="int" resultType="org.scoula.dto.UserFavoriteDTO">
-        SELECT *
+
+    <select id="countByUsersIdxAndAptPblanc" resultType="int">
+        SELECT COUNT(*)
         FROM user_favorite
-        WHERE users_idx = #{usersIdx};
+        WHERE users_idx   = #{usersIdx}
+          AND apt_pblanc   = #{aptPblanc}
     </select>
 
-    <!-- 특정 즐겨찾기 삭제 -->
-    <delete id="deleteUserFavorite" parameterType="int">
+    <select id="countByUsersIdxAndOfficePblanc" resultType="int">
+        SELECT COUNT(*)
+        FROM user_favorite
+        WHERE users_idx      = #{usersIdx}
+          AND office_pblanc  = #{officePblanc}
+    </select>
+
+    <delete id="deleteByUsersIdxAndAptPblanc" parameterType="map">
         DELETE FROM user_favorite
-        WHERE user_favorite_idx = #{userFavoriteIdx};
+        WHERE users_idx = #{usersIdx}
+          AND apt_pblanc = #{aptPblanc}
     </delete>
 
-    <!-- 아파트 즐겨찾기 여부 -->
-    <select id="isFavoriteAPT" parameterType="map" resultType="boolean">
-        SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END
-        FROM user_favorite
+    <delete id="deleteByUsersIdxAndOfficePblanc" parameterType="map">
+        DELETE FROM user_favorite
         WHERE users_idx = #{usersIdx}
-          AND apt_idx = #{noticeIdx};
+          AND office_pblanc = #{officePblanc}
+    </delete>
+
+    <select id="findAptHouseByPblancNo" resultType="org.scoula.dto.HouseListDTO">
+        SELECT *
+        FROM vw_all_house_list
+        WHERE pblanc_no = #{pblancNo}
+          AND house_type IN ('APT', '신혼희망타운')
     </select>
 
-    <!-- 오피스텔 즐겨찾기 여부 -->
-    <select id="isFavoriteOFFI" parameterType="map" resultType="boolean">
-        SELECT CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END
+
+    <select id="findOfficetelHouseByPblancNo" resultType="org.scoula.dto.HouseListDTO">
+        SELECT *
+        FROM vw_all_house_list
+        WHERE pblanc_no = #{pblancNo}
+          AND house_type IN ('오피스텔', '도시형생활주택')
+    </select>
+
+
+    <select id="findFavoritesByUsersIdx" resultType="org.scoula.dto.UserFavoriteDTO">
+        SELECT
+            user_favorite_idx,
+            users_idx,
+            apt_pblanc,
+            office_pblanc,
+            predicted_win_rate,
+            predicted_cutoff_score
         FROM user_favorite
         WHERE users_idx = #{usersIdx}
-          AND offi_idx = #{noticeIdx};
+    </select>
+    <select id="countFavoritesByPblancNo" resultType="int">
+        SELECT COUNT(*)
+        FROM user_favorite
+        WHERE apt_pblanc = #{pblancNo} OR office_pblanc = #{pblancNo}
     </select>
 
 </mapper>

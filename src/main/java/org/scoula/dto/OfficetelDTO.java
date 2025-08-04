@@ -42,8 +42,8 @@ public class OfficetelDTO {
     @JsonProperty("SUBSCRPT_AREA_CODE_NM")
     private String subscrptAreaCodeNm;
 
-    @JsonProperty("HSSPLY_HSHLDCO")
-    private String hssplyHshldco;
+    @JsonProperty("HSSPLY_ADRES")
+    private String hssplyAdres;
 
     @JsonProperty("TOT_SUPLY_HSHLDCO")
     private Integer totSuplyHshldco;
@@ -86,6 +86,11 @@ public class OfficetelDTO {
 
     @JsonProperty("PBLANC_URL")
     private String pblancUrl;
+
+    private Integer officetelIdx;
+
+    private Double latitude;
+    private Double longitude;
 }
 
 

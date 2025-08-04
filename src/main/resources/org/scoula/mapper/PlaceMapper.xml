@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.scoula.mapper.PlaceMapper">
+
+    <insert id="insertHospital" parameterType="org.scoula.dto.PlaceDTO">
+        INSERT INTO hospital (apt_idx, officetel_idx, place_name, distance, road_address_name)
+        VALUES (#{aptIdx}, #{officetelIdx}, #{placeName}, #{distance}, #{address})
+    </insert>
+
+    <insert id="insertSchool" parameterType="org.scoula.dto.PlaceDTO">
+        INSERT INTO school (apt_idx, officetel_idx, place_name, distance, road_address_name)
+        VALUES (#{aptIdx}, #{officetelIdx}, #{placeName}, #{distance}, #{address})
+    </insert>
+
+    <insert id="insertMart" parameterType="org.scoula.dto.PlaceDTO">
+        INSERT INTO mart (apt_idx, officetel_idx, place_name, distance, road_address_name)
+        VALUES (#{aptIdx}, #{officetelIdx}, #{placeName}, #{distance}, #{address})
+    </insert>
+
+    <insert id="insertSubway" parameterType="org.scoula.dto.PlaceDTO">
+        INSERT INTO subway (apt_idx, officetel_idx, place_name, distance, road_address_name)
+        VALUES (#{aptIdx}, #{officetelIdx}, #{placeName}, #{distance}, #{address})
+    </insert>
+
+    <insert id="insertKindergarten" parameterType="org.scoula.dto.PlaceDTO">
+        INSERT INTO kindergarten (apt_idx, officetel_idx, place_name, distance, road_address_name)
+        VALUES (#{aptIdx}, #{officetelIdx}, #{placeName}, #{distance}, #{address})
+    </insert>
+
+    <!-- 중복 체크 -->
+    <select id="existsPlace" parameterType="map" resultType="boolean">
+        <choose>
+            <when test="placeType == 'hospital'">
+                SELECT EXISTS(
+                SELECT 1 FROM hospital
+                WHERE apt_idx = #{aptIdx}
+                AND place_name = #{placeName}
+                AND road_address_name = #{address}
+                )
+            </when>
+            <when test="placeType == 'school'">
+                SELECT EXISTS(
+                SELECT 1 FROM school
+                WHERE apt_idx = #{aptIdx}
+                AND place_name = #{placeName}
+                AND road_address_name = #{address}
+                )
+            </when>
+            <when test="placeType == 'mart'">
+                SELECT EXISTS(
+                SELECT 1 FROM mart
+                WHERE apt_idx = #{aptIdx}
+                AND place_name = #{placeName}
+                AND road_address_name = #{address}
+                )
+            </when>
+            <when test="placeType == 'subway'">
+                SELECT EXISTS(
+                SELECT 1 FROM subway
+                WHERE apt_idx = #{aptIdx}
+                AND place_name = #{placeName}
+                AND road_address_name = #{address}
+                )
+            </when>
+
+            <when test="placeType == 'kindergarten'">
+                SELECT EXISTS(
+                SELECT 1 FROM kindergarten
+                WHERE apt_idx = #{aptIdx}
+                AND place_name = #{placeName}
+                AND road_address_name = #{address}
+                )
+            </when>
+            <otherwise>
+                SELECT FALSE
+            </otherwise>
+        </choose>
+    </select>
+
+    <delete id="truncateHospital">TRUNCATE TABLE hospital;</delete>
+    <delete id="truncateMart">TRUNCATE TABLE mart;</delete>
+    <delete id="truncateSchool">TRUNCATE TABLE school;</delete>
+    <delete id="truncateSubway">TRUNCATE TABLE subway;</delete>
+    <delete id="truncateKindergarten">TRUNCATE TABLE kindergarten;</delete>
+
+</mapper>

@@ -2,25 +2,32 @@ package org.scoula.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.scoula.dto.HouseListDTO;
 import org.scoula.dto.UserFavoriteDTO;
 
 import java.util.List;
 
 @Mapper
 public interface UserFavoriteMapper {
-    // 즐겨찾기 추가
+    /** 단일 즐겨찾기 추가 */
     int insertUserFavorite(UserFavoriteDTO favorite);
 
-    // 특정 사용자의 즐겨찾기 리스트 조회
-    List<UserFavoriteDTO> findFavoritesByUsersIdx(int usersIdx);
+    /** APT 공고번호 기준 중복 체크 */
+    int countByUsersIdxAndAptPblanc(@Param("usersIdx")   int usersIdx, @Param("aptPblanc") String aptPblanc);
 
-    // 특정 즐겨찾기 삭제
-    int deleteUserFavorite(int userFavoriteIdx);
+    /** 오피스텔 공고번호 기준 중복 체크 */
+    int countByUsersIdxAndOfficePblanc(@Param("usersIdx")      int usersIdx, @Param("officePblanc") String officePblanc);
 
-    // 아파트 즐겨찾기 여부
-    boolean isFavoriteAPT(@Param("usersIdx") int usersIdx, @Param("noticeIdx") int noticeIdx);
+    int deleteByUsersIdxAndAptPblanc(@Param("usersIdx") int usersIdx, @Param("aptPblanc") String aptPblanc);
 
-    // 오피스텔 즐겨찾기 여부
-    boolean isFavoriteOFFI(@Param("usersIdx") int usersIdx, @Param("noticeIdx") int noticeIdx);
+    int deleteByUsersIdxAndOfficePblanc(@Param("usersIdx") int usersIdx,@Param("officePblanc") String officePblanc);
+
+    List<HouseListDTO> findAptHouseByPblancNo(@Param("pblancNo") String pblancNo);
+
+    List<HouseListDTO> findOfficetelHouseByPblancNo(@Param("pblancNo") String pblancNo);
+
+    List<UserFavoriteDTO> findFavoritesByUsersIdx(@Param("usersIdx") int usersIdx);
+
+    int countFavoritesByPblancNo(@Param("pblancNo") String pblancNo);
 
 }

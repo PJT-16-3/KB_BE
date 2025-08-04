@@ -53,6 +53,11 @@
         SET password = #{password}
         WHERE user_id = #{userId}
     </update>
+    <update id="resetPassword">
+        UPDATE users
+        SET password = #{newPassword}
+        WHERE user_id = #{userId}
+    </update>
 
 
     <!-- 사용자 삭제 -->
@@ -61,7 +66,7 @@
     </delete>
 
     <!-- 해당 유저가 users_auth 테이블에 있는지 확인 -->
-    <select id="countUserByIdx" parameterType="long" resultType="int">
+    <select id="countUserByIdx" parameterType="int" resultType="int">
         SELECT COUNT(*) FROM users_auth WHERE user_idx = #{usersIdx}
     </select>
 
@@ -79,7 +84,15 @@
         INSERT INTO users_auth (user_idx, auth)
         VALUES (#{usersIdx}, #{auth})
     </insert>
-
+    <insert id="insertUserInfo" parameterType="int">
+        INSERT INTO user_info (users_idx)
+        VALUES (#{usersIdx})
+    </insert>
+    <update id="insertKakaoUserIdByUserId">
+        UPDATE users
+        SET kakao_user_id = #{kakaoUserId}
+        WHERE user_id       = #{userId}
+    </update>
 
 
 </mapper>

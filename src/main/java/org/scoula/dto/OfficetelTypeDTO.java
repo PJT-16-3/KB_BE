@@ -1,5 +1,6 @@
 package org.scoula.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class OfficetelTypeDTO {
     @JsonProperty("SUBSCRPT_REQST_AMOUNT")
     private Integer subscrptReqstAmount;
 
+    @JsonIgnore
     private Integer officetelIdx;
 
 

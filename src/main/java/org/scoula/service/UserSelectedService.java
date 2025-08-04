@@ -34,11 +34,11 @@ public class UserSelectedService {
             selectedMapper.insertSelectedRegion(userInfoIdx, region);
         }
 
-        for (HomeSizeDTO homeSize : dto.getSelectedHomeSize()) {
+        for (HomeSizeDTO homeSize : dto.getSelectedHomesize()) {
             selectedMapper.insertSelectedHomeSize(userInfoIdx, homeSize);
         }
 
-        for (HomeTypeDTO homeType : dto.getSelectedHomeType()) {
+        for (HomeTypeDTO homeType : dto.getSelectedHometype()) {
             selectedMapper.insertSelectedHomeType(userInfoIdx, homeType);
         }
     }

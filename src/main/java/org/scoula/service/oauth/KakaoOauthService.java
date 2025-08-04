@@ -41,11 +41,13 @@ public class KakaoOauthService {
     public KakaoUserInfoDto processKakaoLogin(String code) {
         String accessToken = this.getAccessToken(code);
         KakaoUserInfoDto userInfo = this.getUserInfo(accessToken);
+        log.info("userInfo: {}", userInfo.toString());
 
-        MemberDTO user = this.processKakaoUser(userInfo);
-
-        // JWT 발급 (JwtProcessor 사용)
-        String jwtToken = jwtProcessor.generateAccessToken(user.getUserId());
+//        MemberDTO user = this.processKakaoUser(userInfo);
+            this.processKakaoUser(userInfo);
+//
+//        // JWT 발급 (JwtProcessor 사용)
+//        String jwtToken = jwtProcessor.generateAccessToken(user.getUserId());
 //        userInfo.setToken(jwtToken);
 
         return userInfo;
@@ -170,44 +172,39 @@ public class KakaoOauthService {
     }
 
     // MyBatis로 사용자 DB 처리
-    public MemberDTO processKakaoUser(KakaoUserInfoDto userInfo) {
+    public void processKakaoUser(KakaoUserInfoDto userInfo) {
         MemberDTO existingUser = userMapper.findById(userInfo.getEmail());
-
         if (existingUser != null) {
-            int count = userMapper.countUserByIdx(existingUser.getUsersIdx());
-            if (count == 0) {
-                AuthDTO authUser = new AuthDTO();
-                authUser.setUsersIdx(existingUser.getUsersIdx());
-                authUser.setAuth("ROLE_MEMBER");
-                userMapper.insertAuth(authUser);
-            }
-            return existingUser;
+            userMapper.insertKakaoUserIdByUserId(userInfo.getEmail(),userInfo.getKakaoId());
+
         }
+        else {
+            // 1) birthdate 계산
+            String birthyear = userInfo.getBirthyear();
+            String birthday  = userInfo.getBirthday();
+            String birthyearday = birthyear + "-"
+                    + birthday.substring(0, 2) + "-"
+                    + birthday.substring(2, 4);
+            LocalDate localDate = LocalDate.parse(birthyearday, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            Date birthdate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-        MemberDTO kakaoUser = new MemberDTO();
-        kakaoUser.setKakaoUserId(userInfo.getKakaoId());
-        kakaoUser.setUserId(userInfo.getEmail());
-        kakaoUser.setUserName(userInfo.getName());
-        kakaoUser.setAddress(userInfo.getShippingAddress());
-        kakaoUser.setPassword(null);
+            // 2) Builder로 MemberDTO 생성
+            MemberDTO kakaoUser = MemberDTO.builder()
+                    .kakaoUserId(userInfo.getKakaoId())
+                    .userId(userInfo.getEmail())
+                    .userName(userInfo.getName())
+                    .address(userInfo.getShippingAddress())
+                    .password(null)
+                    .birthdate(birthdate)
+                    .build();
 
-        /* 사용자 생일 정보 받기 */
-        String birthyear = userInfo.getBirthyear();
-        String birthday = userInfo.getBirthday();
-        String birthyearday = birthyear + "-" + birthday.substring(0, 2) + "-" + birthday.substring(2, 4);
-        // 문자열 → LocalDate
-        LocalDate localDate = LocalDate.parse(birthyearday, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        // LocalDate → Date
-        Date birthdate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        kakaoUser.setBirthdate(birthdate);
-
-        /* users 테이블에 kakao 계정 정보 저장 */
-        userMapper.insertUser(kakaoUser);
-
-        AuthDTO kakaoAuth = new AuthDTO();
-        kakaoAuth.setAuth("ROLE_MEMBER");
-        kakaoAuth.setUsersIdx(userMapper.findUserIdxByUserId(userInfo.getEmail()));
-        userMapper.insertAuth(kakaoAuth);
-        return kakaoUser;
+            /* users 테이블에 kakao 계정 정보 저장 */
+            userMapper.insertUser(kakaoUser);
+            AuthDTO kakaoAuth = new AuthDTO();
+            kakaoAuth.setAuth("ROLE_MEMBER");
+            kakaoAuth.setUsersIdx(userMapper.findUserIdxByUserId(userInfo.getEmail()));
+            userMapper.insertAuth(kakaoAuth);
+//            return kakaoUser;
+        }
     }
 }

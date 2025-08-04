@@ -13,9 +13,15 @@ import java.util.List;
 @AllArgsConstructor
 public class UserSelectedDTO {
 
-    @JsonProperty("userInfo")
+    @JsonProperty("user_info")
     private HomePriceDTO homePrice = new HomePriceDTO();
+
+    @JsonProperty("selected_region")
     private List<RegionDTO> selectedRegion = new ArrayList<>();
-    private List<HomeSizeDTO> selectedHomeSize = new ArrayList<>();
-    private List<HomeTypeDTO> selectedHomeType = new ArrayList<>();
+
+    @JsonProperty("selected_homesize")
+    private List<HomeSizeDTO> selectedHomesize = new ArrayList<>();
+
+    @JsonProperty("selected_hometype")
+    private List<HomeTypeDTO> selectedHometype = new ArrayList<>();
 }

@@ -10,6 +10,7 @@ import org.scoula.mapper.AptMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -38,7 +39,8 @@ public class OfficetelService {
     public OfficetelResponseDTO fetchOfficetelData(int page, int perPage) {
         try {
             // 오늘 날짜 월로 쿼리 날리기 yyyy-MM 포맷
-            String startDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+//            String startDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM"));
+            String startDate = "2025-07";
 
             StringBuilder urlBuilder = new StringBuilder(OFFICETEL_URL);
             urlBuilder.append("?")
@@ -205,6 +207,32 @@ public class OfficetelService {
         LocalDate firstDayOfMonth = LocalDate.now().withDayOfMonth(1);
         log.info("오피스텔 데이터 삭제 : {}", firstDayOfMonth);
         officeMapper.deleteOldFromOfficetel(firstDayOfMonth);
+    }
+
+    public OfficetelDetailDTO getOfficetelDetail(String pblancNo) {
+        try {
+
+            OfficetelDetailDTO dto = officeMapper.getOfficetelDetails(pblancNo);
+            int aptIdx = officeMapper.findOfficetelIdxByPblancNo(pblancNo);
+            if (dto == null || aptIdx == 0 ) {
+                log.warn("해당 공고번호 [{}]에 대한 청약 정보가 존재하지 않습니다.", pblancNo);
+                throw new IllegalArgumentException("해당 공고에 대한 정보가 존재하지 않습니다.");
+            }
+            List<InfraPlaceDTO> infraPlaces = officeMapper.getOfficetelInfraPlace(aptIdx);
+            dto.setInfraPlaces(infraPlaces);
+            return dto;
+        } catch (Exception e) {
+            log.error("청약 공고 상세 조회 중 예외 발생. pblancNo: {}, error: {}", pblancNo, e.getMessage(), e);
+            throw new IllegalStateException("청약 공고 상세 정보를 조회하는 중 오류가 발생했습니다.", e);
+        }
+    }
+
+    @Transactional
+    public void incrementOfficeViewCount(String pblancNo) {
+        int updated = officeMapper.incrementOfficetelViewCount(pblancNo);
+        if (updated == 0 ) {
+            throw new IllegalArgumentException("존재하지 않는 공고번호 입니다."+pblancNo);
+        }
     }
 
 

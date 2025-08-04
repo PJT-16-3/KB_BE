@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.scoula.mapper.ProbabilityMapper">
+
+    <select id="selectScoreRecords" resultType="org.scoula.dto.ScoreRecord">
+        SELECT
+            min_score AS minScore,
+            avg_score AS avgScore,
+            max_score AS maxScore,
+            supply_count AS supplyCount,
+            resident_code AS residentCode
+        FROM subscription_history
+        WHERE sido = #{sido}
+          AND sigungu = #{sigungu}
+          AND resident_code = #{residentCode}
+    </select>
+
+    <select id="selectAptInfo" resultType="org.scoula.dto.AptInfo">
+        SELECT
+            sido,
+            sigungu,
+            resident_code AS residentCode,
+            supply_count AS supplyCount
+        FROM apt_table
+        WHERE apt_idx = #{aptIdx}
+    </select>
+
+
+</mapper>

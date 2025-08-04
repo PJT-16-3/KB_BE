@@ -14,6 +14,6 @@ public class AuthDTO implements GrantedAuthority {
 
     @Override
     public String getAuthority() {
-        return "";
+        return auth;
     }
 }
