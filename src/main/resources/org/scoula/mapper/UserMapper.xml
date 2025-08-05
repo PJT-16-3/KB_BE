@@ -12,6 +12,19 @@
         WHERE user_id = #{userId}
     </select>
 
+    <select id="findAuthByUserIdx" resultType="org.scoula.security.dto.AuthDTO">
+        SELECT
+            ua.user_idx,
+            ua.auth
+        FROM
+            users_auth ua
+                JOIN users u ON ua.user_idx = u.users_idx
+        WHERE
+            u.users_idx = #{userIdx}
+    </select>
+
+
+
     <!-- user_id로 사용자 조회 -->
     <select id="findById" parameterType="String" resultType="MemberDTO">
         SELECT users_idx, user_id, user_name, password, address, kakao_user_id, birthdate
@@ -94,5 +107,10 @@
         WHERE user_id       = #{userId}
     </update>
 
+    <select id="findUserRegionByIdx" parameterType="int" resultType="String">
+        SELECT address
+        FROM users
+        WHERE users_idx = #{userIdx}
+    </select>
 
 </mapper>

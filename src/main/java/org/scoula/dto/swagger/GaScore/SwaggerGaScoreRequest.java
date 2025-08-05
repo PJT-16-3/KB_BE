@@ -1,6 +1,5 @@
 package org.scoula.dto.swagger.GaScore;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -31,10 +30,6 @@ public class SwaggerGaScoreRequest {
     @ApiModelProperty(value = "혼인 날짜 (yyyy-MM, null 허용)", example = "2015-05")
     @JsonProperty("wedding_date")
     private String weddingDate;
-
-    @ApiModelProperty(value = "무주택 기간 (단위 : 년)", example = "6", required = true)
-    @JsonProperty("no_house_period")
-    private int noHousePeriod;
 
     @ApiModelProperty(value = "부양가족 수", example = "3", required = true)
     @JsonProperty("dependents_nm")

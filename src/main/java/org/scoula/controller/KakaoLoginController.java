@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.scoula.dto.oauth.KakaoUserInfoDto;
+import org.scoula.security.dto.AuthResultDTO;
 import org.scoula.service.oauth.KakaoOauthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,9 +27,9 @@ public class KakaoLoginController {
      */
     @GetMapping("/callback")
     @ApiOperation(value = "카카오 로그인 콜백 처리", hidden = true)
-    public ResponseEntity<KakaoUserInfoDto> kakaoLogin(@RequestParam("code") String code) {
+    public ResponseEntity<AuthResultDTO> kakaoLogin(@RequestParam("code") String code) {
         log.info("카카오 인가 코드 수신: {}", code);
-        KakaoUserInfoDto userInfo = kakaoOauthService.processKakaoLogin(code);
+        AuthResultDTO userInfo = kakaoOauthService.processKakaoLogin(code);
         return ResponseEntity.ok(userInfo);
     }
 
