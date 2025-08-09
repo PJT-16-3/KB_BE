@@ -436,5 +436,15 @@
         WHERE apt_pblanc = #{pblancNo}
     </select>
 
+    <select id="getAptType" resultType="AptTypeDTO">
+        SELECT *
+        FROM apt_type
+        WHERE apt_idx = #{aptIdx}
+    </select>
 
+    <select id="findRegionByAptIdx" resultType="String">
+        SELECT subscript_area_code_nm
+        FROM apt_table
+        WHERE apt_idx = #{aptIdx}
+    </select>
 </mapper>
