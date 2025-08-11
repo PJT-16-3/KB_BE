@@ -17,9 +17,4 @@ public interface PlaceMapper {
                         @Param("address") String address,
                         @Param("placeType") String placeType);
 
-    void truncateHospital();
-    void truncateMart();
-    void truncateSchool();
-    void truncateSubway();
-    void truncateKindergarten();
 }

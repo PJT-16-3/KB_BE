@@ -8,26 +8,31 @@
     <insert id="insertHospital" parameterType="org.scoula.dto.PlaceDTO">
         INSERT INTO hospital (apt_idx, officetel_idx, place_name, distance, road_address_name)
         VALUES (#{aptIdx}, #{officetelIdx}, #{placeName}, #{distance}, #{address})
+        ON DUPLICATE KEY UPDATE hospital_idx = hospital_idx
     </insert>
 
     <insert id="insertSchool" parameterType="org.scoula.dto.PlaceDTO">
         INSERT INTO school (apt_idx, officetel_idx, place_name, distance, road_address_name)
         VALUES (#{aptIdx}, #{officetelIdx}, #{placeName}, #{distance}, #{address})
+        ON DUPLICATE KEY UPDATE school_idx = school_idx
     </insert>
 
     <insert id="insertMart" parameterType="org.scoula.dto.PlaceDTO">
         INSERT INTO mart (apt_idx, officetel_idx, place_name, distance, road_address_name)
         VALUES (#{aptIdx}, #{officetelIdx}, #{placeName}, #{distance}, #{address})
+        ON DUPLICATE KEY UPDATE mart_idx = mart_idx
     </insert>
 
     <insert id="insertSubway" parameterType="org.scoula.dto.PlaceDTO">
         INSERT INTO subway (apt_idx, officetel_idx, place_name, distance, road_address_name)
         VALUES (#{aptIdx}, #{officetelIdx}, #{placeName}, #{distance}, #{address})
+        ON DUPLICATE KEY UPDATE subway_idx = subway_idx
     </insert>
 
     <insert id="insertKindergarten" parameterType="org.scoula.dto.PlaceDTO">
         INSERT INTO kindergarten (apt_idx, officetel_idx, place_name, distance, road_address_name)
         VALUES (#{aptIdx}, #{officetelIdx}, #{placeName}, #{distance}, #{address})
+        ON DUPLICATE KEY UPDATE kindergarten_idx = kindergarten_idx
     </insert>
 
     <!-- 중복 체크 -->
@@ -79,11 +84,5 @@
             </otherwise>
         </choose>
     </select>
-
-    <delete id="truncateHospital">TRUNCATE TABLE hospital;</delete>
-    <delete id="truncateMart">TRUNCATE TABLE mart;</delete>
-    <delete id="truncateSchool">TRUNCATE TABLE school;</delete>
-    <delete id="truncateSubway">TRUNCATE TABLE subway;</delete>
-    <delete id="truncateKindergarten">TRUNCATE TABLE kindergarten;</delete>
 
 </mapper>

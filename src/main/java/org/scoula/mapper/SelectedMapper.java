@@ -16,7 +16,6 @@ public interface SelectedMapper {
     void deleteSelectedHomeType(int userInfoIdx);
 
     void insertSelectedRegion(@Param("userIdx") int userInfoIdx, @Param("region") RegionDTO region);
-    void insertSelectedHomeSize(@Param("userIdx") int userInfoIdx, @Param("homesize") HomeSizeDTO homesize);
     void insertSelectedHomeType(@Param("userIdx") int userInfoIdx, @Param("hometype") HomeTypeDTO hometype);
 
     HomePriceDTO selectHomePriceByUserIdx(int userIdx);
@@ -25,4 +24,8 @@ public interface SelectedMapper {
     List<RegionDTO> selectSelectedRegion(int userInfoIdx);
     List<HomeSizeDTO> selectSelectedHomesize(int userInfoIdx);
     List<HomeTypeDTO> selectSelectedHometype(int userInfoIdx);
+
+    int upsertSelectedHomeSize(@Param("userInfoIdx") int userInfoIdx,
+                               @Param("homeSize") HomeSizeDTO homeSize,
+                               @Param("userRank") int userRank);
 }
