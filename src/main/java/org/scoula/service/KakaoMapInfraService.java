@@ -24,7 +24,7 @@ public class KakaoMapInfraService {
     private final PlaceMapper placeMapper;
     private final RestTemplate restTemplate = new RestTemplate();
 
-    @Value("${kakao.rest_key}")
+    @Value("${kakao.map.rest_key}")
     private String kakaoRestKey;
 
     public KakaoMapInfraService(AptMapper aptMapper, PlaceMapper placeMapper) {
@@ -33,12 +33,6 @@ public class KakaoMapInfraService {
     }
 
     public void fetchAndSavePlacesForAll() {
-        placeMapper.truncateHospital();
-        placeMapper.truncateMart();
-        placeMapper.truncateSchool();
-        placeMapper.truncateSubway();
-        placeMapper.truncateKindergarten();
-        log.info("모든 장소 테이블 초기화 완료");
 
         List<AptDTO> aptList = aptMapper.findAllAptLocations();
         List<OfficetelDTO> officetelList = aptMapper.findAllOfficetelLocations();

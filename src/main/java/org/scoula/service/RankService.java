@@ -63,11 +63,11 @@ public class RankService {
         String address = userMapper.findUserRegionByIdx(userIdx);
 
         Map<String, String> rankMap = new LinkedHashMap<>();
-        rankMap.put("85 이하", checkRank(85, houseType, specltRdnEarthAt, subscrptArea,
+        rankMap.put("85㎡ 이하", checkRank(85, houseType, specltRdnEarthAt, subscrptArea,
                 resFinalRoundNo, resAccountBalance, paymentPeriod, residenceStartDate, address));
-        rankMap.put("102 이하", checkRank(102, houseType, specltRdnEarthAt, subscrptArea,
+        rankMap.put("102㎡ 이하", checkRank(102, houseType, specltRdnEarthAt, subscrptArea,
                 resFinalRoundNo, resAccountBalance, paymentPeriod, residenceStartDate, address));
-        rankMap.put("135 이하", checkRank(135, houseType, specltRdnEarthAt, subscrptArea,
+        rankMap.put("135㎡ 이하", checkRank(135, houseType, specltRdnEarthAt, subscrptArea,
                 resFinalRoundNo, resAccountBalance, paymentPeriod, residenceStartDate, address));
         rankMap.put("모든 면적", checkRank(999, houseType, specltRdnEarthAt, subscrptArea,
                 resFinalRoundNo, resAccountBalance, paymentPeriod, residenceStartDate, address));
@@ -146,4 +146,55 @@ public class RankService {
                 region.startsWith("대구") || region.startsWith("대전") ||
                 region.startsWith("울산"));
     }
+
+    public int calculateRankForAreaOnly(int userIdx, double minHomesize, double maxHomesize) {
+        ChungyakAccountDTO account = accountMapper.findAccountByUserIdx(userIdx);
+        if (account == null) throw new IllegalStateException("사용자 청약 계좌 정보가 없습니다.");
+
+        GaScoreDTO gaScore = gaScoreMapper.findGaScoreByUserIdx(userIdx);
+        if (gaScore == null) throw new IllegalStateException("사용자 가점 정보가 없습니다.");
+
+        Integer paymentPeriod = gaScore.getPaymentPeriod();
+        LocalDate residenceStartDate = null;
+        if (gaScore.getResidenceStartDate() != null) {
+            YearMonth ym = YearMonth.parse(
+                    gaScore.getResidenceStartDate(),
+                    DateTimeFormatter.ofPattern("yyyy-MM")
+            );
+            residenceStartDate = ym.atDay(1);
+        }
+        String address = userMapper.findUserRegionByIdx(userIdx);
+
+        int resFinalRoundNo = Integer.parseInt(account.getResFinalRoundNo());
+        int resAccountBalance = Integer.parseInt(account.getAccountBalance());
+
+        int areaLimit = (int) Math.ceil(maxHomesize);
+
+        boolean isFirst = isFirstPriorityCombined(
+                areaLimit,
+                resFinalRoundNo,
+                resAccountBalance,
+                paymentPeriod,
+                residenceStartDate,
+                address
+        );
+        return isFirst ? 1 : 2;
+    }
+
+    private boolean isFirstPriorityCombined(
+            int areaLimit,
+            int resFinalRoundNo,
+            int resAccountBalance,
+            Integer paymentPeriod,
+            LocalDate residenceStartDate,
+            String address
+    ) {
+        int requiredDeposit = getRequiredDeposit(address, areaLimit);
+        boolean depositOK = resAccountBalance >= requiredDeposit;
+
+        boolean roundsOK = (paymentPeriod != null && paymentPeriod >= 24) && (resFinalRoundNo >= 24);
+
+        return depositOK && roundsOK;
+    }
 }
+

@@ -28,11 +28,6 @@
         VALUES (#{userIdx}, #{region.si}, #{region.gunGu})
     </insert>
 
-    <insert id="insertSelectedHomeSize">
-        INSERT INTO selected_homesize (user_info_idx, min_homesize, max_homesize)
-        VALUES (#{userIdx}, #{homesize.minHomesize}, #{homesize.maxHomesize})
-    </insert>
-
     <insert id="insertSelectedHomeType">
         INSERT INTO selected_hometype (user_info_idx, selected_house_secd)
         VALUES (#{userIdx}, #{hometype.selectedHouseSecd})
@@ -62,4 +57,19 @@
         SELECT selected_house_secd AS selectedHouseSecd
         FROM selected_hometype WHERE user_info_idx = #{userInfoIdx}
     </select>
+
+    <insert id="upsertSelectedHomeSize">
+        INSERT INTO selected_homesize (
+            user_info_idx, min_homesize, max_homesize, user_rank
+        ) VALUES (
+                     #{userInfoIdx},
+                     #{homeSize.minHomesize},
+                     #{homeSize.maxHomesize},
+                     #{userRank}
+                 )
+        ON DUPLICATE KEY UPDATE
+                             min_homesize = VALUES(min_homesize),
+                             max_homesize = VALUES(max_homesize),
+                             user_rank    = VALUES(user_rank)
+    </insert>
 </mapper>
