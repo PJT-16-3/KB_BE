@@ -436,5 +436,27 @@
         WHERE apt_pblanc = #{pblancNo}
     </select>
 
+    <select id="getAptType" resultType="AptTypeDTO">
+        SELECT *
+        FROM apt_type
+        WHERE apt_idx = #{aptIdx}
+    </select>
 
+    <select id="getOfficetelType" resultType="OfficetelTypeDTO">
+        SELECT *
+        FROM officetel_type
+        WHERE officetel_idx = #{officetelIdx}
+    </select>
+
+    <select id="findRegionByAptIdx" resultType="String">
+        SELECT subscript_area_code_nm
+        FROM apt_table
+        WHERE pblanc_no = #{pblancNo}
+    </select>
+
+    <select id="findRegionByOfficetelIdx" resultType="String">
+        SELECT subscript_area_code_nm
+        FROM officetel_table
+        WHERE pblanc_no = #{pblancNo}
+    </select>
 </mapper>

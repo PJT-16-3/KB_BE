@@ -33,7 +33,6 @@ public class PythonApiService {
                 return null; // 또는 Optional.empty() 형태로 바꾸기 가능
             }
 
-
             return dto;
 
         } catch (Exception e) {
@@ -61,7 +60,6 @@ public class PythonApiService {
             throw new RuntimeException("FastAPI 예측 요청 실패: " + response.getStatusCode());
         }
     }
-
 
 
 
