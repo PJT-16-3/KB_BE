@@ -35,6 +35,8 @@ public interface AptMapper {
     List<InfraPlaceDTO> getOfficetelInfraPlace(@Param("officetelIdx") int officetelIdx);
 
     AptTypeDTO getAptType(@Param("aptIdx") int aptIdx);
-    String findRegionByAptIdx(@Param("aptIdx") int aptIdx);
+    OfficetelTypeDTO getOfficetelType(@Param("officetelIdx") int officetelIdx);
+    String findRegionByAptIdx(@Param("pblancNo") String pblancNo);
+    String findRegionByOfficetelIdx(@Param("pblancNo") String pblancNo);
 
 }

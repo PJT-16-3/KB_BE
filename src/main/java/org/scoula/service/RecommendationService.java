@@ -11,6 +11,7 @@ import org.scoula.security.util.JwtProcessor;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -35,10 +36,15 @@ public class RecommendationService {
 
         // 선호 정보에 맞는 청약 리스트
         List<HouseListDTO> houseList = houseListMapper.getRecommendationList(preference);
-
+        HashMap<Integer, HouseListDTO> map = new HashMap<>();
         for (HouseListDTO house : houseList) {
             String pblancNo = house.getPblancNo();
             PredictRequestDTO reqDTO = new PredictRequestDTO();
+            // 아파트, 오피 똑같이 들어가는 값
+            reqDTO.setScore(userInfo.getTotalGaScore());
+            reqDTO.setSi(house.getSi());
+            reqDTO.setSigungu(house.getSigungu());
+
             if (house.getHouseType().equals("APT") || house.getHouseType().equals("신혼희망타운")) {
                 int aptIdx = aptMapper.findAptIdxByPblancNo(pblancNo);
                 AptDetailDTO aptDetail = aptMapper.getAptDetails(pblancNo);
@@ -46,20 +52,27 @@ public class RecommendationService {
 
                 reqDTO.setGnsplyHshldco(aptType.getSuplyHshldco());
                 reqDTO.setSpsplyHshldco(aptType.getSpsplyHshldco());
-                reqDTO.setSi(house.getSi());
-                reqDTO.setSigungu(house.getSigungu());
                 reqDTO.setTotSuplyHshldco(aptType.getSuplyHshldco() + aptType.getSpsplyHshldco());
                 reqDTO.setSuplyHshldco(aptType.getSuplyHshldco() + aptType.getSpsplyHshldco());
-                reqDTO.setHouse_rank(1);
-                if (userMapper.findUserRegionByIdx(usersIdx).startsWith(aptMapper.findRegionByAptIdx(aptIdx))) {
+                reqDTO.setHouse_rank(1);    // 이거 db에서 값 받아와야함
+                if (userMapper.findUserRegionByIdx(usersIdx).startsWith(aptMapper.findRegionByAptIdx(pblancNo))) {
                     reqDTO.setResideSecd(1);
                 } else {
                     reqDTO.setResideSecd(2);
                 }
-                reqDTO.setScore(userInfo.getTotalGaScore());
+            } else {
+                int officetelIdx = aptMapper.findOfficetelIdxByPblancNo(pblancNo);
+                OfficetelDetailDTO officetelDetail = aptMapper.getOfficetelDetails(pblancNo);
+                OfficetelTypeDTO officeType = aptMapper.getOfficetelType(officetelIdx);
+                reqDTO.setTotSuplyHshldco(officetelDetail.getTotSuplyHshldco());
+                reqDTO.setSuplyHshldco(officeType.getSuplyHshldco());
+                if (userMapper.findUserRegionByIdx(usersIdx).startsWith(aptMapper.findRegionByOfficetelIdx(pblancNo))) {
+                    reqDTO.setResideSecd(1);
+                } else {
+                    reqDTO.setResideSecd(2);
+                }
             }
         }
-
         return houseList;
     }
 
@@ -71,9 +84,13 @@ public class RecommendationService {
 //            "tot_supy_hshldco": 3000,
 //            "suply_hshldco": 60,
 //            "house_rank": 1,
-//            "reside_secd": 1,
+//            "reside_secd": 1, 거주코드
 //            "score": 30
 //    }
+
+    public double getWinProbability(PredictRequestDTO reqDTO) {
+
+    }
 
     public PreferenceDTO getPreferenceInfo (int usersIdx, UserInfoDTO userInfo) {
         List<String> si = userInfoMapper.getSelectedSi(usersIdx);
