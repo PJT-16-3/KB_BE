@@ -2,7 +2,7 @@ package org.scoula.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.scoula.dto.HouseListDTO;
+import org.scoula.dto.home.HouseListDTO;
 import org.scoula.mapper.HouseListMapper;
 import org.springframework.stereotype.Service;
 

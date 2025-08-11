@@ -18,7 +18,7 @@
           AND resident_code = #{residentCode}
     </select>
 
-    <select id="selectAptInfo" resultType="org.scoula.dto.AptInfo">
+    <select id="selectAptInfo" resultType="org.scoula.dto.apt.AptInfo">
         SELECT
             sido,
             sigungu,
@@ -26,6 +26,11 @@
             supply_count AS supplyCount
         FROM apt_table
         WHERE apt_idx = #{aptIdx}
+    </select>
+        <select id="selectPythonAptInfoByPblancNo" resultType="org.scoula.dto.PythonAptPredictRequestDTO">
+        SELECT *
+        FROM vw_apt_predict_input
+        WHERE pblanc_no = #{pblancNo}
     </select>
 
 

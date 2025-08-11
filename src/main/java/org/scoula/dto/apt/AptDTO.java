@@ -1,4 +1,4 @@
-package org.scoula.dto;
+package org.scoula.dto.apt;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

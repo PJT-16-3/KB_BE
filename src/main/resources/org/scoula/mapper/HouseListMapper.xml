@@ -5,7 +5,7 @@
 
 <mapper namespace="org.scoula.mapper.HouseListMapper">
 
-    <select id="getAllHouseList" resultType="org.scoula.dto.HouseListDTO">
+    <select id="getAllHouseList" resultType="org.scoula.dto.home.HouseListDTO">
         SELECT
             v.*,
             CASE

@@ -1,9 +1,10 @@
-package org.scoula.dto;
+package org.scoula.dto.apt;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import org.scoula.dto.InfraPlaceDTO;
 
 import java.time.LocalDate;
 import java.util.List;

@@ -3,7 +3,7 @@ package org.scoula.service;
 import lombok.RequiredArgsConstructor;
 import org.scoula.dto.ProbabilityDTO;
 import org.scoula.dto.ScoreRecord;
-import org.scoula.dto.AptInfo;
+import org.scoula.dto.apt.AptInfo;
 import org.scoula.mapper.ProbabilityMapper;
 import org.springframework.stereotype.Service;
 

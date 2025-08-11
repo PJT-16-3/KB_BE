@@ -1,4 +1,4 @@
-package org.scoula.dto;
+package org.scoula.dto.home;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;

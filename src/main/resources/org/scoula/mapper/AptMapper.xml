@@ -5,7 +5,7 @@
 
 <mapper namespace="org.scoula.mapper.AptMapper">
 
-    <insert id="insertApt" parameterType="org.scoula.dto.AptDTO">
+    <insert id="insertApt" parameterType="org.scoula.dto.apt.AptDTO">
         INSERT INTO apt_table (
             house_manage_no, pblanc_no, house_nm, house_secd, house_secd_nm,
             house_dtl_secd, house_dtl_secd_nm, rent_secd, rent_secd_nm,
@@ -57,7 +57,7 @@
                                  spsply_hshldco = VALUES(spsply_hshldco),
                                  lttot_top_amount = VALUES(lttot_top_amount);
     </insert>
-    <insert id="insertOfficetel" parameterType="org.scoula.dto.OfficetelDTO">
+    <insert id="insertOfficetel" parameterType="org.scoula.dto.officetel.OfficetelDTO">
         INSERT INTO officetel_table (
             house_manage_no,
             pblanc_no,
@@ -131,17 +131,17 @@
     </delete>
 
 
-    <select id="getIdxAndHouseMangeNo" resultType="org.scoula.dto.AptIdxDTO">
+    <select id="getIdxAndHouseMangeNo" resultType="org.scoula.dto.apt.AptIdxDTO">
         SELECT apt_idx, house_manage_no
         FROM apt_table
     </select>
 
-    <select id="getIdxAndHouseManageNoFromOfficetel" resultType="org.scoula.dto.OfficetelIdxDTO">
+    <select id="getIdxAndHouseManageNoFromOfficetel" resultType="org.scoula.dto.officetel.OfficetelIdxDTO">
         SELECT officetel_idx, house_manage_no
         FROM officetel_table
     </select>
 
-    <resultMap id="aptTypeMap" type="org.scoula.dto.AptTypeDTO">
+    <resultMap id="aptTypeMap" type="org.scoula.dto.apt.AptTypeDTO">
         <result property="houseTy" column="house_ty"/>
         <result property="suplyAr" column="suply_ar"/>
         <result property="suplyHshldco" column="suply_hshldco"/>
@@ -149,7 +149,7 @@
         <result property="lttotTopAmount" column="lttot_top_amount"/>
     </resultMap>
 
-    <resultMap id="aptDetailMap" type="org.scoula.dto.AptDetailDTO">
+    <resultMap id="aptDetailMap" type="org.scoula.dto.apt.AptDetailDTO">
 
         <id property="pblancNo" column="pblanc_no"/>
         <result property="aptIdx" column="apt_idx"/>
@@ -303,7 +303,7 @@
     </delete>
 
 
-    <resultMap id="officetelTypeMap" type="org.scoula.dto.OfficetelTypeDTO">
+    <resultMap id="officetelTypeMap" type="org.scoula.dto.officetel.OfficetelTypeDTO">
         <result property="modelNo" column="model_no"/>
         <result property="tp" column="tp"/>
         <result property="excluseAr" column="excluse_ar"/>
@@ -315,7 +315,7 @@
     </resultMap>
 
 
-    <resultMap id="officetelDetailMap" type="org.scoula.dto.OfficetelDetailDTO">
+    <resultMap id="officetelDetailMap" type="org.scoula.dto.officetel.OfficetelDetailDTO">
         <id property="pblancNo" column="pblanc_no"/>
         <result property="favoriteCount" column="favorite_count"/>
         <result property="viewCount" column="view_count"/>
@@ -390,7 +390,7 @@
         WHERE ot.pblanc_no = #{pblancNo}
     </select>
 
-    <select id="findAllAptLocations" resultType="org.scoula.dto.AptDTO">
+    <select id="findAllAptLocations" resultType="org.scoula.dto.apt.AptDTO">
         SELECT
             apt_idx AS aptIdx,
             latitude,
@@ -422,7 +422,7 @@
         WHERE pblanc_no = #{pblancNo}
     </select>
 
-    <select id="findAllOfficetelLocations" resultType="org.scoula.dto.OfficetelDTO">
+    <select id="findAllOfficetelLocations" resultType="org.scoula.dto.officetel.OfficetelDTO">
         SELECT
             officetel_idx AS officetelIdx,
             latitude,

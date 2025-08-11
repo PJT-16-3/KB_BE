@@ -1,8 +1,8 @@
 package org.scoula.service;
 
 import lombok.extern.log4j.Log4j2;
-import org.scoula.dto.AptDTO;
-import org.scoula.dto.OfficetelDTO;
+import org.scoula.dto.apt.AptDTO;
+import org.scoula.dto.officetel.OfficetelDTO;
 import org.scoula.dto.PlaceDTO;
 import org.scoula.mapper.AptMapper;
 import org.scoula.mapper.PlaceMapper;

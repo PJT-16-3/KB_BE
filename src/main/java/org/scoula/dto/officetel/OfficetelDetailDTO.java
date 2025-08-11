@@ -1,10 +1,11 @@
-package org.scoula.dto;
+package org.scoula.dto.officetel;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
+import org.scoula.dto.InfraPlaceDTO;
 
 import java.time.LocalDate;
 import java.util.List;

@@ -2,7 +2,7 @@ package org.scoula.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.scoula.dto.AptDetailDTO;
+import org.scoula.dto.apt.AptDetailDTO;
 import org.scoula.dto.ChungyakAccountDTO;
 import org.scoula.dto.GaScoreDTO;
 import org.scoula.dto.swagger.Rank.RankAreaResponseDTO;

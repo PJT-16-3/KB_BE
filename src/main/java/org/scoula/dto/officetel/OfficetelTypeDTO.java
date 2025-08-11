@@ -1,4 +1,4 @@
-package org.scoula.dto;
+package org.scoula.dto.officetel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

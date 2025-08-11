@@ -38,7 +38,7 @@
         VALUES (#{userIdx}, #{hometype.selectedHouseSecd})
     </insert>
 
-    <select id="selectHomePriceByUserIdx" resultType="org.scoula.dto.HomePriceDTO">
+    <select id="selectHomePriceByUserIdx" resultType="org.scoula.dto.home.HomePriceDTO">
         SELECT hope_min_price AS hopeMinPrice,
                hope_max_price AS hopeMaxPrice
         FROM user_info
@@ -53,12 +53,12 @@
         SELECT si, gun_gu FROM selected_region WHERE user_info_idx = #{userInfoIdx}
     </select>
 
-    <select id="selectSelectedHomesize" resultType="org.scoula.dto.HomeSizeDTO">
+    <select id="selectSelectedHomesize" resultType="org.scoula.dto.home.HomeSizeDTO">
         SELECT min_homesize AS minHomesize, max_homesize AS maxHomesize
         FROM selected_homesize WHERE user_info_idx = #{userInfoIdx}
     </select>
 
-    <select id="selectSelectedHometype" resultType="org.scoula.dto.HomeTypeDTO">
+    <select id="selectSelectedHometype" resultType="org.scoula.dto.home.HomeTypeDTO">
         SELECT selected_house_secd AS selectedHouseSecd
         FROM selected_hometype WHERE user_info_idx = #{userInfoIdx}
     </select>

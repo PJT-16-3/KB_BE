@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.scoula.dto.AptDetailDTO;
+import org.scoula.dto.apt.AptDetailDTO;
 import org.scoula.dto.ChungyakAccountDTO;
 import org.scoula.dto.GaScoreDTO;
 import org.scoula.dto.swagger.Rank.RankAreaResponseDTO;
@@ -14,7 +14,6 @@ import org.scoula.mapper.AptMapper;
 import org.scoula.mapper.GaScoreMapper;
 import org.scoula.mapper.UserMapper;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 class RankServiceTest {

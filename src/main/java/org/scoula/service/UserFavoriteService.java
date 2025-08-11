@@ -2,9 +2,8 @@ package org.scoula.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import lombok.extern.slf4j.Slf4j;
-import org.scoula.dto.HouseListDTO;
-import org.scoula.dto.UserFavoriteDTO;
+import org.scoula.dto.home.HouseListDTO;
+import org.scoula.dto.user.UserFavoriteDTO;
 import org.scoula.mapper.UserFavoriteMapper;
 import org.springframework.stereotype.Service;
 

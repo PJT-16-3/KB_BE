@@ -1,4 +1,4 @@
-package org.scoula.dto;
+package org.scoula.dto.apt;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OfficetelResponseDTO {
+public class AptResponseDTO {
     private Integer matchCount;
-    private List<OfficetelDTO> data;
+    private List<AptDTO> data;
 }

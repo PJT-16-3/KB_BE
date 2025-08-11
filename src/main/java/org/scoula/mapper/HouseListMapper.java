@@ -2,7 +2,7 @@ package org.scoula.mapper;
 
 import org.apache.ibatis.annotations.Param;
 import org.scoula.dto.AllHouseListDTO;
-import org.scoula.dto.HouseListDTO;
+import org.scoula.dto.home.HouseListDTO;
 
 import java.util.List;
 

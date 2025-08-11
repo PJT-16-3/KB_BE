@@ -3,6 +3,14 @@ package org.scoula.mapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.scoula.dto.*;
+import org.scoula.dto.apt.AptDTO;
+import org.scoula.dto.apt.AptDetailDTO;
+import org.scoula.dto.apt.AptIdxDTO;
+import org.scoula.dto.apt.AptTypeDTO;
+import org.scoula.dto.officetel.OfficetelDTO;
+import org.scoula.dto.officetel.OfficetelDetailDTO;
+import org.scoula.dto.officetel.OfficetelIdxDTO;
+import org.scoula.dto.officetel.OfficetelTypeDTO;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -33,6 +41,7 @@ public interface AptMapper {
 
     List<InfraPlaceDTO> getInfraPlace(@Param("aptIdx") int aptIdx);
     List<InfraPlaceDTO> getOfficetelInfraPlace(@Param("officetelIdx") int officetelIdx);
+
 
 
 

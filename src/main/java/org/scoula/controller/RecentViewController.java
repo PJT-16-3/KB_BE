@@ -5,9 +5,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.scoula.dto.AllHouseListDTO;
-import org.scoula.dto.AptDetailDTO;
-import org.scoula.dto.GetRecentChecksDTO;
-import org.scoula.dto.RecentCheckDTO;
 import org.scoula.mapper.UserMapper;
 import org.scoula.security.util.JwtProcessor;
 import org.scoula.service.AptService;
@@ -19,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 

@@ -1,4 +1,4 @@
-package org.scoula.dto;
+package org.scoula.dto.apt;
 
 import lombok.Data;
 

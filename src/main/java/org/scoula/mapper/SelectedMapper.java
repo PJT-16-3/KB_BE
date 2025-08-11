@@ -3,6 +3,9 @@ package org.scoula.mapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.scoula.dto.*;
+import org.scoula.dto.home.HomePriceDTO;
+import org.scoula.dto.home.HomeSizeDTO;
+import org.scoula.dto.home.HomeTypeDTO;
 
 import java.util.List;
 

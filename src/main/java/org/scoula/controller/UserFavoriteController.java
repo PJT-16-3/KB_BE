@@ -5,7 +5,7 @@ import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.scoula.dto.FavoriteRequestDTO;
-import org.scoula.dto.HouseListDTO;
+import org.scoula.dto.home.HouseListDTO;
 import org.scoula.dto.swagger.UserFavorite.SwaggerAddFavoriteRequestDTO;
 import org.scoula.mapper.UserMapper;
 import org.scoula.security.util.JwtProcessor;

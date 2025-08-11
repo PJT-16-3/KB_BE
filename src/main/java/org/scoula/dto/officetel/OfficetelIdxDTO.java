@@ -1,4 +1,4 @@
-package org.scoula.dto;
+package org.scoula.dto.officetel;
 
 import lombok.Data;
 

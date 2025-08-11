@@ -1,8 +1,8 @@
 package org.scoula.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.scoula.dto.ChatRequest;
-import org.scoula.dto.ChatResponse;
+import org.scoula.dto.chatbot.ChatRequest;
+import org.scoula.dto.chatbot.ChatResponse;
 import org.scoula.service.FaqService;
 import org.scoula.service.OpenAiService;
 import org.springframework.http.ResponseEntity;

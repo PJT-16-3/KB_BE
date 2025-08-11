@@ -2,7 +2,7 @@ package org.scoula.controller;
 
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
-import org.scoula.dto.UserSelectedDTO;
+import org.scoula.dto.user.UserSelectedDTO;
 import org.scoula.security.util.JwtProcessor;
 import org.scoula.service.UserSelectedService;
 import org.springframework.http.ResponseEntity;
