@@ -65,7 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.addAllowedOriginPattern("*"); // 모든 Origin 허용 + credentials 허용
+        config.addAllowedOrigin("http://localhost:5173");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);
@@ -81,8 +81,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers(
                 "/assets/**",
                 "/*",
-                "/v1/auth/refresh",
-                "/v1/auth/signup",
+
 
                 // Swagger 관련 경로 추가
                 "/v2/api-docs",
@@ -106,9 +105,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()//경로별접근권한설정
                 .antMatchers(HttpMethod.OPTIONS,"/**").permitAll()
-                .antMatchers("/v1/auth/refresh", "/v1/auth/signup","/v1/auth/resetpassword","/v1/email/**","/v1/kakao/**","/predict/from-python").permitAll()
-
-                .antMatchers("/v1/auth/logout","/v1/auth/signout","/v1/auth/update").hasRole("MEMBER")
+                .antMatchers("/v1/auth/refresh", "/v1/auth/signup","/v1/auth/resetpassword","/v1/email/**","/v1/kakao/**",
+                        "/v1/auth/signout","/v1/auth/refresh","/v1/auth/signup").permitAll()
+                .antMatchers("/predict/from-python").hasRole("MEMBER")
+                .antMatchers("/v1/auth/logout","/v1/auth/update").hasRole("MEMBER")
                 .antMatchers("/v1/account/**").hasRole("MEMBER")
                 .antMatchers("v1/me/**").hasRole("MEMBER")
                 .antMatchers("/v1/subscriptions/**").hasRole("MEMBER")

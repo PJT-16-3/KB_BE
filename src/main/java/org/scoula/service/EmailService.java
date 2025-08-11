@@ -77,7 +77,7 @@ public class EmailService {
         );
     }
 
-    private String generateCode() {
+    public String generateCode() {
         return Long.toHexString(Double.doubleToLongBits(Math.random()))
                 .substring(0, 6).toUpperCase();
     }

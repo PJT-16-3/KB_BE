@@ -67,17 +67,17 @@ public class UserService {
     }
 
 
-    public void deleteUser(String userId, String inputPassword) {
+    public void deleteUser(String userId /*String inputPassword*/) {
         // 1. DB에서 회원 정보 조회
         MemberDTO user = userMapper.findById(userId);
         if (user == null) {
             throw new IllegalArgumentException("해당 사용자가 존재하지 않습니다.");
         }
 
-        // 2. 입력한 비밀번호와 암호화된 비밀번호 비교
-        if (!passwordEncoder.matches(inputPassword, user.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
+//        // 2. 입력한 비밀번호와 암호화된 비밀번호 비교
+//        if (!passwordEncoder.matches(inputPassword, user.getPassword())) {
+//            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+//        }
         // 3. 비밀번호가 맞으면 삭제
         userMapper.deleteUser(userId);
         log.info("회원 탈퇴 완료 - userId: {}", userId);
