@@ -114,6 +114,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/v1/account/**").hasRole("MEMBER")
                 .antMatchers("v1/me/**").hasRole("MEMBER")
                 .antMatchers("/v1/subscriptions/**").hasRole("MEMBER")
+                .antMatchers("/v1/user/preferences").hasRole("MEMBER")
                 .anyRequest().authenticated(); //나머지는로그인된경우모두허용
 
 
