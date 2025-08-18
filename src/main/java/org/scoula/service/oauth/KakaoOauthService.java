@@ -12,6 +12,7 @@ import org.scoula.security.dto.MemberDTO;
 import org.scoula.security.dto.UserInfoDTO;
 import org.scoula.security.util.JwtProcessor;
 import org.scoula.service.EmailService;
+import org.scoula.service.UserService;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.Cache;
@@ -43,6 +44,7 @@ public class KakaoOauthService {
     private final UserMapper userMapper;
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
 
     @Value("${kakao.rest_key}")
     private String REST_API_KEY;
@@ -234,6 +236,9 @@ public class KakaoOauthService {
 
             /* users 테이블에 kakao 계정 정보 저장 */
             userMapper.insertUser(kakaoUser);
+            Integer idx = userService.findUserIdxByUserId(kakaoUser.getUserId());
+            userMapper.insertUserInfo(idx);
+
 
             // users_auth 테이블에 kakao 계정 정보 저장
             AuthDTO kakaoAuth = new AuthDTO();
