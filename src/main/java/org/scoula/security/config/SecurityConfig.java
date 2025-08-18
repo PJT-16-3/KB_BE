@@ -109,6 +109,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/v1/auth/refresh", "/v1/auth/signup","/v1/auth/resetpassword","/v1/email/**","/v1/kakao/**", "/kakao/**",
                         "/v1/auth/signout","/v1/auth/refresh","/v1/auth/signup").permitAll()
                 .antMatchers("/predict/from-python").hasRole("MEMBER")
+                .antMatchers("/v1/alarm/**").hasRole("MEMBER")
                 .antMatchers("/v1/auth/logout","/v1/auth/update").hasRole("MEMBER")
                 .antMatchers("/v1/account/**").hasRole("MEMBER")
                 .antMatchers("v1/me/**").hasRole("MEMBER")
