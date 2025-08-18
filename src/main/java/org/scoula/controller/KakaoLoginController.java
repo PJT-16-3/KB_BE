@@ -16,7 +16,7 @@ import java.util.Map;
 @Log4j2
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/kakao")
+@RequestMapping("/v1/kakao")
 @Api(tags = "카카오 API", description = "카카오 소셜 로그인 관련 API")
 public class KakaoLoginController {
 
