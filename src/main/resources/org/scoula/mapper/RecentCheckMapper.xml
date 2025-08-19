@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.scoula.mapper.RecentCheckMapper">
+
+    <insert id="insertRecentCheck" parameterType="org.scoula.dto.RecentCheckDTO">
+        INSERT INTO recent_check (users_idx, pblanc_no, viewed_at, house_type)
+        VALUES (#{usersIdx}, #{pblancNo}, NOW(), #{houseType})
+            ON DUPLICATE KEY UPDATE
+                                 viewed_at = NOW(),
+                                 house_type = VALUES(house_type)
+    </insert>
+
+    <select id="getRecentChecks" parameterType="int" resultType="org.scoula.dto.GetRecentChecksDTO">
+        SELECT
+               users_idx,
+               pblanc_no ,
+               house_type
+        FROM recent_check
+        WHERE users_idx = #{usersIdx}
+        ORDER BY viewed_at DESC
+        LIMIT 5
+    </select>
+
+
+</mapper>

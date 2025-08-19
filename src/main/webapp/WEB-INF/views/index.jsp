@@ -7,7 +7,7 @@
     <title>Title</title>
 </head>
 <body>
-<h1>환영합니다.</h1>
+<h1>ZIBI backend Server.</h1>
 
 <sec:authorize access="isAnonymous()"> <!-- 로그인 안한 경우-->
     <a href="/security/login">로그인</a>

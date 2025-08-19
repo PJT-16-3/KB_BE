@@ -146,6 +146,8 @@ public class AptDetailDTO {
 
     @JsonProperty("pblanc_url")
     private String pblancUrl;
+    private String latitude;
+    private String longitude;
 
     @JsonProperty("apt_type")
     private List<AptTypeDTO> aptType;

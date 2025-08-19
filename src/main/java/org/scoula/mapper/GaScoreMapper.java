@@ -11,4 +11,6 @@ public interface GaScoreMapper {
     void insertGaScore(@Param("dto") GaScoreDTO dto, @Param("userIdx") int userIdx);
 
     GaScoreDTO findGaScoreByUserIdx(@Param("userIdx") int userIdx);
+
+    Integer getGaScoreByUserIdx(@Param("userIdx") int userIdx);
 }

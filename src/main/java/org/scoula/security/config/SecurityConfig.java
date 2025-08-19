@@ -64,14 +64,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        // 와일드카드 + credentials 허용
-        config.addAllowedOriginPattern("*");
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
+        config.setAllowCredentials(true); // 쿠키/인증정보 허용
+        config.addAllowedOriginPattern("*"); // 모든 도메인 허용
+        config.addAllowedHeader("*"); // 모든 헤더 허용
+        config.addAllowedMethod("*"); // 모든 HTTP 메서드 허용
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
+
+
+
 
 
     //jwt 관련
@@ -80,8 +82,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers(
                 "/assets/**",
                 "/*",
-                "/v1/auth/refresh",
-                "/v1/auth/signup",
+
 
                 // Swagger 관련 경로 추가
                 "/v2/api-docs",
@@ -105,12 +106,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()//경로별접근권한설정
                 .antMatchers(HttpMethod.OPTIONS,"/**").permitAll()
-                .antMatchers("/v1/auth/refresh", "/v1/auth/signup","/v1/auth/resetpassword","/v1/email/**","/api/oauth/kakao/**").permitAll()
-
-                .antMatchers("/v1/auth/logout","/v1/auth/signout","/v1/auth/update").hasRole("MEMBER")
+                .antMatchers("/v1/auth/refresh", "/v1/auth/signup","/v1/auth/resetpassword","/v1/email/**","/v1/kakao/**", "/kakao/**",
+                        "/v1/auth/signout","/v1/auth/refresh","/v1/auth/signup").permitAll()
+                .antMatchers("/predict/from-python").hasRole("MEMBER")
+                .antMatchers("/v1/alarm/**").hasRole("MEMBER")
+                .antMatchers("/v1/auth/logout","/v1/auth/update").hasRole("MEMBER")
                 .antMatchers("/v1/account/**").hasRole("MEMBER")
                 .antMatchers("v1/me/**").hasRole("MEMBER")
                 .antMatchers("/v1/subscriptions/**").hasRole("MEMBER")
+                .antMatchers("/v1/user/preferences").hasRole("MEMBER")
                 .anyRequest().authenticated(); //나머지는로그인된경우모두허용
 
 

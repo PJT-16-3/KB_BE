@@ -1,16 +1,13 @@
 name: CI-CD.yml
 on:
-  pull_request:
-    branches: ["test"]
-    types:
-      - closed
+  push:
+    branches: ["develop"]
 
 jobs:
   build:
-    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
-      - name: 📢 깃허브 checkout
+      - name: 📢 깃허브 checkout!!!!!!
         uses: actions/checkout@v3
 
       - name: 📢 GitHubAction JDK 17 설치
@@ -60,7 +57,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    if: github.event.pull_request.merged == true
+    if: github.event_name == 'push'
     steps:
       - name: 📢SSH로 EC2에 접속해보자
         uses: appleboy/ssh-action@master

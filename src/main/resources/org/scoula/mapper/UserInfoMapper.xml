@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.scoula.mapper.UserInfoMapper">
+
+    <select id="getUserInfoByUsersIdx" parameterType="int" resultType="org.scoula.dto.UserInfoDTO">
+        SELECT user_info_idx, hope_max_price, hope_min_price, total_ga_score, marital_status
+        FROM user_info
+        WHERE users_idx = #{usersIdx}
+    </select>
+
+    <select id="findSelectedSiGunGuByUserInfoIdx" resultType="org.scoula.dto.RegionDTO">
+        SELECT si, gun_gu AS gunGu
+        FROM selected_region
+        WHERE user_info_idx = #{userInfoIdx}
+    </select>
+
+
+    <select id="findSelectedMinHomeSizeByUserInfoIdx" resultType="int">
+        SELECT min_homesize
+        FROM selected_homesize
+        WHERE user_info_idx = #{userInfoIdx}
+    </select>
+
+    <select id="findSelectedMaxHomeSizeByUserInfoIdx" resultType="int">
+        SELECT max_homesize
+        FROM selected_homesize
+        WHERE user_info_idx = #{userInfoIdx}
+    </select>
+
+    <select id="findSelectedHomeTypeByUserInfoIdx" resultType="String">
+        SELECT selected_house_secd
+        FROM selected_hometype
+        WHERE user_info_idx = #{userInfoIdx}
+    </select>
+
+</mapper>

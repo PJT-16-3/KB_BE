@@ -11,15 +11,4 @@ public interface PlaceMapper {
     void insertMart(PlaceDTO place);
     void insertSubway(PlaceDTO place);
     void insertKindergarten(PlaceDTO place);
-
-    boolean existsPlace(@Param("aptIdx") int aptIdx,
-                        @Param("placeName") String placeName,
-                        @Param("address") String address,
-                        @Param("placeType") String placeType);
-
-    void truncateHospital();
-    void truncateMart();
-    void truncateSchool();
-    void truncateSubway();
-    void truncateKindergarten();
 }

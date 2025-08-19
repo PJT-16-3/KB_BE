@@ -10,6 +10,7 @@ import org.scoula.service.AuthService;
 import org.scoula.service.UserService;
 import org.scoula.util.TokenUtils;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -89,14 +90,15 @@ public class AuthController {
             @ApiResponse(code = 404, message = "사용자 정보 없음")
     })
     public ResponseEntity<?> signOut(
-            @ApiParam(hidden = true) @RequestHeader("Authorization") String bearerToken,
-            @RequestBody SwaggerSignOutRequestDTO request
+            @ApiParam(hidden = true) @RequestHeader("Authorization") String bearerToken
+//            @RequestBody SwaggerSignOutRequestDTO request
     ) {
         String accessToken = tokenUtils.extractAccessToken(bearerToken);
         String userId = jwtProcessor.getUsername(accessToken);
 
         try {
-            userService.deleteUser(userId, request.getPassword());
+            userService.deleteUser(userId /*request.getPassword()*/);
+            SecurityContextHolder.clearContext();
             return ResponseEntity.ok(Map.of("message", "회원 탈퇴 완료!"));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(401).body(Map.of("error", e.getMessage()));

@@ -1,0 +1,5 @@
+services:
+  my-docker-server:
+    build: .
+    ports:
+      - "8080:8080"

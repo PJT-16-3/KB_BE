@@ -9,8 +9,8 @@ public class PlaceDTO {
     private String placeType;
     private String placeName;
     private String address;
-    private Integer distance;           // 거리 (meter)
-    private double latitude;
-    private double longitude;
+    private Long distance;
+    private Double latitude;
+    private Double longitude;
     private String categoryName;
 }

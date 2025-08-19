@@ -13,4 +13,6 @@ public class InfraPlaceDTO {
     private Double distance;
     @JsonProperty("road_address_name")
     private String roadAddressName;
+    private String longitude;
+    private String latitude;
 }

@@ -41,7 +41,11 @@
                              res_account_tr_date = VALUES(res_account_tr_date),
                              is_payment = VALUES(is_payment);
     </insert>
-
+    <update id="updateFcmToken">
+        UPDATE users
+        SET fcm_token = #{fcmToken}
+        WHERE users_idx = #{userIdx};
+    </update>
 
 
     <select id="findAccountByUserIdx" parameterType="int" resultType="org.scoula.dto.ChungyakAccountDTO">

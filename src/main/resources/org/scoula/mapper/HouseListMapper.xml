@@ -18,6 +18,117 @@
                                AND uf.users_idx = #{userIdx}
     </select>
 
+    <select id="getAptRecommendationList" resultType="org.scoula.dto.RecommendationListDTO">
+        <![CDATA[
+            SELECT
+                v.house_nm, v.pblanc_no, v.application_period, v.si, v.sigungu, v.hssply_adres,
+                v.house_type, v.min_area, v.max_area, v.min_price, v.max_price,
+                v.latitude, v.longitude,
+                (SELECT COUNT(*) FROM user_favorite uf WHERE uf.apt_pblanc = v.pblanc_no) AS favorite_count,
+                CASE
+                    WHEN uf.users_idx IS NOT NULL THEN TRUE
+                    ELSE FALSE
+                    END AS is_favorite
+            FROM vw_all_house_list v
+                     LEFT JOIN user_favorite uf
+                               ON v.pblanc_no = COALESCE(uf.apt_pblanc, uf.office_pblanc)
+                                   AND uf.users_idx = #{preference.usersIdx}
+            WHERE v.si = #{region.si}
+            AND v.sigungu = #{region.gunGu}
+            AND (
+                CAST(v.min_price AS DECIMAL(15, 0)) BETWEEN #{preference.hopeMinPrice} AND #{preference.hopeMaxPrice}
+                    OR CAST(v.max_price AS DECIMAL(15, 0)) BETWEEN #{preference.hopeMinPrice} AND #{preference.hopeMaxPrice}
+                )
+            AND (
+                (v.min_area BETWEEN #{preference.minHomeSize} AND #{preference.maxHomeSize})
+                    OR (v.max_area BETWEEN #{preference.minHomeSize} AND #{preference.maxHomeSize})
+                )
+            AND (
+                (#{preference.maritalStatus} = 1 AND v.house_type IN ('APT','신혼희망타운'))
+                    OR (#{preference.maritalStatus} = 0 AND v.house_type IN ('APT'))
+                )
+            ]]>
+    </select>
+
+    <select id="getOfficetelRecommendationList" resultType="org.scoula.dto.RecommendationListDTO">
+        <![CDATA[
+            SELECT
+                v.house_nm, v.pblanc_no, v.application_period, v.si, v.sigungu, v.hssply_adres,
+                v.house_type, v.min_area, v.max_area, v.min_price, v.max_price,
+                v.latitude, v.longitude,
+                (SELECT COUNT(*) FROM user_favorite uf WHERE uf.office_pblanc = v.pblanc_no) AS favorite_count,
+                CASE
+                    WHEN uf.users_idx IS NOT NULL THEN TRUE
+                    ELSE FALSE
+                    END AS is_favorite
+            FROM vw_all_house_list v
+                     LEFT JOIN user_favorite uf
+                               ON v.pblanc_no = COALESCE(uf.apt_pblanc, uf.office_pblanc)
+                                   AND uf.users_idx = #{preference.usersIdx}
+            WHERE v.si = #{region.si}
+            AND v.sigungu = #{region.gunGu}
+            AND (
+                CAST(v.min_price AS DECIMAL(15, 0)) BETWEEN #{preference.hopeMinPrice} AND #{preference.hopeMaxPrice}
+                    OR CAST(v.max_price AS DECIMAL(15, 0)) BETWEEN #{preference.hopeMinPrice} AND #{preference.hopeMaxPrice}
+                )
+            AND (
+                v.min_area BETWEEN #{preference.minHomeSize} AND #{preference.maxHomeSize}
+                    OR v.max_area BETWEEN #{preference.minHomeSize} AND #{preference.maxHomeSize}
+                )
+            AND (
+             (#{preference.maritalStatus} = 1 AND v.house_type IN ('오피스텔','도시형생활주택'))
+                    OR (#{preference.maritalStatus} = 0 AND v.house_type IN ('오피스텔'))
+                )
+            ]]>
+    </select>
 
 
+
+    <!--    <select id="getAptRecommendationList" resultType="org.scoula.dto.HouseListDTO">-->
+<!--        <![CDATA[-->
+<!--        SELECT house_nm, pblanc_no, application_period, si, sigungu, house_type, min_area, max_area, min_price, max_price, latitude, longitude-->
+<!--        FROM vw_all_house_list-->
+<!--        WHERE si = #{region.si}-->
+<!--          AND sigungu = #{region.gunGu}-->
+<!--          AND (-->
+<!--            CAST(min_price AS DECIMAL(15, 0)) BETWEEN #{preference.hopeMinPrice} AND #{preference.hopeMaxPrice}-->
+<!--                OR CAST(max_price AS DECIMAL(15, 0)) BETWEEN #{preference.hopeMinPrice} AND #{preference.hopeMaxPrice}-->
+<!--            )-->
+<!--          AND (-->
+<!--            (min_area BETWEEN #{preference.minHomeSize} AND #{preference.maxHomeSize})-->
+<!--                OR (max_area BETWEEN #{preference.minHomeSize} AND #{preference.maxHomeSize})-->
+<!--            )-->
+<!--          AND (-->
+<!--            (#{preference.maritalStatus} = 1 AND (house_type IN ('APT','신혼희망타운')))-->
+<!--                OR (#{preference.maritalStatus} = 0 AND house_type IN ('APT'))-->
+<!--            )-->
+<!--        ]]>-->
+<!--    </select>-->
+
+<!--    <select id="getOfficetelRecommendationList" resultType="org.scoula.dto.HouseListDTO">-->
+<!--        <![CDATA[-->
+<!--        SELECT house_nm, pblanc_no, application_period, si, sigungu, house_type, min_area, max_area, min_price, max_price, latitude, longitude-->
+<!--        FROM vw_all_house_list-->
+<!--        WHERE si = #{region.si}-->
+<!--          AND sigungu = #{region.gunGu}-->
+<!--          AND (-->
+<!--            CAST(min_price AS DECIMAL(15, 0)) BETWEEN #{preference.hopeMinPrice} AND #{preference.hopeMaxPrice}-->
+<!--                OR CAST(max_price AS DECIMAL(15, 0)) BETWEEN #{preference.hopeMinPrice} AND #{preference.hopeMaxPrice}-->
+<!--            )-->
+<!--          AND (-->
+<!--            (min_area BETWEEN #{preference.minHomeSize} AND #{preference.maxHomeSize})-->
+<!--                OR (max_area BETWEEN #{preference.minHomeSize} AND #{preference.maxHomeSize})-->
+<!--            )-->
+<!--          AND (-->
+<!--            (#{preference.maritalStatus} = 1 AND (house_type IN ('오피스텔','도시형생활주택')))-->
+<!--                OR (#{preference.maritalStatus} = 0 AND house_type IN ('오피스텔'))-->
+<!--                )-->
+<!--        ]]>-->
+<!--    </select>-->
+
+    <select id="getHouseDetailByPblancNo" resultType="org.scoula.dto.AllHouseListDTO">
+        SELECT *
+        FROM vw_all_house_list
+        WHERE pblanc_no = #{pblancNo}
+    </select>
 </mapper>

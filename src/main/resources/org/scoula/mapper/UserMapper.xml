@@ -12,6 +12,18 @@
         WHERE user_id = #{userId}
     </select>
 
+    <select id="findAuthByUserIdx" resultType="org.scoula.security.dto.AuthDTO">
+        SELECT
+            user_idx,
+            auth
+        FROM
+            users_auth
+        WHERE
+            user_idx = #{userIdx}
+    </select>
+
+
+
     <!-- user_id로 사용자 조회 -->
     <select id="findById" parameterType="String" resultType="MemberDTO">
         SELECT users_idx, user_id, user_name, password, address, kakao_user_id, birthdate
@@ -93,6 +105,21 @@
         SET kakao_user_id = #{kakaoUserId}
         WHERE user_id       = #{userId}
     </update>
+    <update id="initFcmTokenByIdx">
+        UPDATE users
+        SET fcm_token = null
+        WHERE users_idx = #{userIdx}
+    </update>
 
+    <select id="findUserRegionByIdx" parameterType="int" resultType="String">
+        SELECT address
+        FROM users
+        WHERE users_idx = #{userIdx}
+    </select>
+    <select id="findFcmTokenByUserIdx" resultType="java.lang.String">
+        SELECT fcm_token
+        FROM users
+        WHERE users_idx = #{userIdx}
+    </select>
 
 </mapper>

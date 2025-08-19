@@ -192,6 +192,8 @@
         <result property="mdatTrgetAreaSecd" column="mdat_trget_area_secd"/>
         <result property="parcprcUlsAt" column="parcprc_uls_at"/>
         <result property="pblancUrl" column="pblanc_url"/>
+        <result property="latitude" column="latitude" />
+        <result property="longitude" column="longitude"/>
         <collection property="aptType" resultMap="aptTypeMap"/>
     </resultMap>
 
@@ -244,6 +246,8 @@
             a.parcprc_uls_at,
             a.pblanc_url,
             a.view_count,
+            a.latitude,
+            a.longitude,
             (SELECT COUNT(*) FROM user_favorite uf WHERE uf.apt_pblanc = a.pblanc_no) AS favorite_count,
             t.house_ty,
             t.suply_ar,
@@ -336,6 +340,8 @@
         <result property="bsnsMbyNm" column="bsns_mby_nm"/>
         <result property="mdhsTelno" column="mdhs_telno"/>
         <result property="mvnPrearngeYm" column="mvn_prearnge_ym"/>
+        <result property="latitude" column="latitude"/>
+        <result property="longitude" column="longitude"/>
         <result property="pblancUrl" column="pblanc_url"/>
         <collection property="officetelType" resultMap="officetelTypeMap"/>
     </resultMap>
@@ -374,6 +380,8 @@
             ott.subscrpt_reqst_amount,
             ott.house_manage_no ,
             ott.pblanc_no,
+            ot.longitude,
+            ot.latitude,
         (SELECT COUNT(*) FROM user_favorite uf WHERE uf.office_pblanc = ot.pblanc_no) AS favorite_count
 
         FROM officetel_table ot
@@ -398,12 +406,12 @@
     </select>
 
     <select id="getInfraPlace" resultType="org.scoula.dto.InfraPlaceDTO">
-        SELECT place_type, place_idx, place_name, distance, road_address_name
+        SELECT place_type, place_idx, place_name, distance, road_address_name,longitude,latitude
         FROM vw_infra_places WHERE apt_idx = #{aptIdx}
     </select>
 
     <select id="getOfficetelInfraPlace" resultType="org.scoula.dto.InfraPlaceDTO">
-        SELECT place_type, place_idx, place_name, distance, road_address_name
+        SELECT place_type, place_idx, place_name, distance, road_address_name,longitude,latitude
         FROM vw_infra_places WHERE officetel_idx = #{officetelIdx}
     </select>
 
@@ -428,5 +436,33 @@
         WHERE apt_pblanc = #{pblancNo}
     </select>
 
+    <select id="getAptSuplyHshldco" resultType="int">
+        SELECT SUM(suply_hshldco)
+        FROM apt_type
+        WHERE apt_idx = #{aptIdx}
+    </select>
 
+    <select id="getAptspsplyHshldco" resultType="int">
+        SELECT SUM(spsply_hshldco)
+        FROM apt_type
+        WHERE apt_idx = #{aptIdx}
+    </select>
+
+    <select id="getOfficetelType" resultType="org.scoula.dto.OfficetelTypeDTO">
+        SELECT *
+        FROM officetel_type
+        WHERE officetel_idx = #{officetelIdx}
+    </select>
+
+    <select id="findRegionByAptPblancNo" resultType="String">
+        SELECT subscrpt_area_code_nm
+        FROM apt_table
+        WHERE pblanc_no = #{pblancNo}
+    </select>
+
+    <select id="findRegionByOfficetelPblancNo" resultType="String">
+        SELECT subscrpt_area_code_nm
+        FROM officetel_table
+        WHERE pblanc_no = #{pblancNo}
+    </select>
 </mapper>

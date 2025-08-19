@@ -27,6 +27,23 @@
         FROM apt_table
         WHERE apt_idx = #{aptIdx}
     </select>
+    <select id="getPythonAptInfoByPblancNo" resultType="org.scoula.dto.PythonAptRequestDTO">
+        SELECT *
+        FROM vw_apt_predict_input
+        WHERE pblanc_no = #{pblancNo}
+    </select>
+    <select id="getPythonOfficetelInfoByPblancNo" resultType="org.scoula.dto.PythonOfficetelRequestDTO">
+        SELECT
+            o.si                              AS si,
+            o.sigungu                         AS sigungu,
+            o.tot_suply_hshldco               AS totSuplyHshldco,
+            COALESCE(SUM(t.suply_hshldco), 0) AS suplyHshldco
+        FROM officetel_table o
+                 LEFT JOIN officetel_type t
+                           ON o.officetel_idx = t.officetel_idx
+        WHERE o.pblanc_no = #{pblancNo}
+        GROUP BY o.si, o.sigungu, o.tot_suply_hshldco
+    </select>
 
 
 </mapper>

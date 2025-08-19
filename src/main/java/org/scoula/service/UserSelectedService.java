@@ -17,6 +17,7 @@ public class UserSelectedService {
 
     private final SelectedMapper selectedMapper;
     private final UserMapper userMapper;
+    private final RankService rankService;
 
     @Transactional
     public void saveAllPreferences(String userId, UserSelectedDTO dto) {
@@ -27,20 +28,34 @@ public class UserSelectedService {
         int userInfoIdx = selectedMapper.findUserInfoIdxByUserIdx(usersIdx);
 
         selectedMapper.deleteSelectedRegion(userInfoIdx);
-        selectedMapper.deleteSelectedHomeSize(userInfoIdx);
         selectedMapper.deleteSelectedHomeType(userInfoIdx);
 
-        for (RegionDTO region : dto.getSelectedRegion()) {
-            selectedMapper.insertSelectedRegion(userInfoIdx, region);
+        List<RegionDTO> regions = dto.getSelectedRegion();
+        if (regions != null) {
+            for (RegionDTO region : regions) {
+                selectedMapper.insertSelectedRegion(userInfoIdx, region);
+            }
+        }
+        List<HomeTypeDTO> hometypes = dto.getSelectedHometype();
+        if (hometypes != null) {
+            for (HomeTypeDTO homeType : hometypes) {
+                selectedMapper.insertSelectedHomeType(userInfoIdx, homeType);
+            }
         }
 
-        for (HomeSizeDTO homeSize : dto.getSelectedHomesize()) {
-            selectedMapper.insertSelectedHomeSize(userInfoIdx, homeSize);
+        List<HomeSizeDTO> homesizes = dto.getSelectedHomesize();
+        if (homesizes == null || homesizes.isEmpty() || homesizes.size() != 1) {
+            throw new IllegalArgumentException("selected_homesize는 정확히 1개여야 합니다.");
         }
+        HomeSizeDTO homesize = homesizes.get(0);
 
-        for (HomeTypeDTO homeType : dto.getSelectedHometype()) {
-            selectedMapper.insertSelectedHomeType(userInfoIdx, homeType);
-        }
+        int userRank = rankService.calculateRankForAreaOnly(
+                usersIdx,
+                homesize.getMinHomesize(),
+                homesize.getMaxHomesize()
+        );
+
+        selectedMapper.upsertSelectedHomeSize(userInfoIdx, homesize, userRank);
     }
 
     public UserSelectedDTO getUserSelected(String userId) {

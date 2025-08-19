@@ -46,4 +46,6 @@ public class OfficetelDetailDTO {
     private String pblancUrl;
     private List<OfficetelTypeDTO> officetelType;
     private List<InfraPlaceDTO> infraPlaces;
+    private String latitude;
+    private String longitude;
 }

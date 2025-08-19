@@ -1,6 +1,5 @@
 package org.scoula.dto.swagger.GaScore;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -12,7 +11,7 @@ public class SwaggerGaScoreRequest {
     @JsonProperty("head_of_household")
     private int headOfHousehold;
 
-    @ApiModelProperty(value = "주택 소유 여부 (1: 무주택, 0: 유주택)", example = "1", required = true)
+    @ApiModelProperty(value = "주택 소유 여부 (1: 유주택, 0: 무주택)", example = "1", required = true)
     @JsonProperty("house_owner")
     private int houseOwner;
 
@@ -32,19 +31,15 @@ public class SwaggerGaScoreRequest {
     @JsonProperty("wedding_date")
     private String weddingDate;
 
-    @ApiModelProperty(value = "무주택 기간 (단위 : 년)", example = "6", required = true)
-    @JsonProperty("no_house_period")
-    private int noHousePeriod;
-
     @ApiModelProperty(value = "부양가족 수", example = "3", required = true)
     @JsonProperty("dependents_nm")
     private int dependentsNm;
 
-    @ApiModelProperty()
+    @ApiModelProperty(value = "생년월일", example = "2000-01-01",required = true)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY, value = "birth_date")
     private String birthDate;
 
-    @ApiModelProperty()
+    @ApiModelProperty(value = "거주 기간", example= "2015-01",required = true)
     @JsonProperty("residence_start_date")
     private String residenceStartDate;
 

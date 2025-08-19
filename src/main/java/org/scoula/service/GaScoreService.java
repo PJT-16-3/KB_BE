@@ -45,41 +45,38 @@ public class GaScoreService {
 
         int noHousePeriod;
         int noHouseScore;
-        String residenceStartDate = requestDto.getResidenceStartDate();
 
-        if (age < 30 && requestDto.getMaritalStatus() == 0) {
+        LocalDate thirtiethBirthday = birthDate.plusYears(30);
+        LocalDate baseDate = null;
+
+
+        if (requestDto.getHouseOwner() == 1) {
             noHousePeriod = 0;
             noHouseScore = 0;
-        } else if (requestDto.getHouseOwner() == 1) {
+        }
+        else if (age < 30 && requestDto.getMaritalStatus() == 0 && disposalDate == null) {
             noHousePeriod = 0;
             noHouseScore = 0;
-        } else {
-            LocalDate thirtiethBirthday = birthDate.plusYears(30);
-            LocalDate baseDate;
-
-            if (requestDto.getHouseOwner() == 0) {
+        }
+        else {
+            if (age < 30) {
                 if (requestDto.getMaritalStatus() == 1 && weddingDate != null) {
-                    baseDate = thirtiethBirthday.isBefore(weddingDate) ? weddingDate : thirtiethBirthday;
+                    baseDate = (disposalDate != null)
+                            ? Stream.of(weddingDate, disposalDate).max(LocalDate::compareTo).get()
+                            : weddingDate;
                 } else {
-                    baseDate = thirtiethBirthday;
+                    baseDate = (disposalDate != null)
+                            ? Stream.of(thirtiethBirthday, disposalDate).max(LocalDate::compareTo).get()
+                            : thirtiethBirthday;
                 }
             } else {
-                if (requestDto.getMaritalStatus() == 1 && weddingDate != null && disposalDate != null) {
-                    baseDate = Stream.of(thirtiethBirthday, weddingDate, disposalDate)
-                            .max(LocalDate::compareTo).get();
-                } else if (disposalDate != null) {
-                    baseDate = thirtiethBirthday.isAfter(disposalDate) ? thirtiethBirthday : disposalDate;
-                } else {
-                    baseDate = thirtiethBirthday;
-                }
+                baseDate = (disposalDate != null)
+                        ? Stream.of(thirtiethBirthday, disposalDate).max(LocalDate::compareTo).get()
+                        : thirtiethBirthday;
             }
 
-            noHousePeriod = (int) ChronoUnit.YEARS.between(baseDate, LocalDate.now());
+            noHousePeriod = Math.max(0, (int) ChronoUnit.YEARS.between(baseDate, LocalDate.now()));
             noHouseScore = calculateNoHouseScore(noHousePeriod);
-
-            if (residenceStartDate == null) {
-                residenceStartDate = baseDate.format(DateTimeFormatter.ofPattern("yyyy-MM"));
-            }
         }
 
         int dependentsScore = Math.min((requestDto.getDependentsNm() + 1) * 5, 35);
@@ -101,14 +98,14 @@ public class GaScoreService {
                 .weddingDate(weddingDate != null ?
                         weddingDate.format(DateTimeFormatter.ofPattern("yyyy-MM")) : null)
                 .birthDate(requestDto.getBirthDate())
-                .residenceStartDate(residenceStartDate)
+                .residenceStartDate(requestDto.getResidenceStartDate())
                 .paymentPeriod(paymentPeriod)
                 .paymentPeriodScore(paymentPeriodScore)
                 .totalGaScore(totalScore)
                 .build();
 
         gaScoreMapper.insertGaScore(responseDTO, userIdx);
-        log.info("사용자 {} 청약 가점 저장 완료: totalScore={}", userIdx, totalScore);
+        log.info("사용자 {} 청약 가점: totalScore={}", userIdx, totalScore);
 
         return responseDTO;
     }
@@ -139,7 +136,6 @@ public class GaScoreService {
     private int calculatePaymentPeriod(int userIdx) {
         LocalDate startDate = accountMapper.findAccountStartDate(userIdx);
         if (startDate == null) return 0;
-
         return (int) ChronoUnit.MONTHS.between(startDate, LocalDate.now());
     }
 

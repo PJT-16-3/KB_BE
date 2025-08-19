@@ -87,5 +87,10 @@
         FROM user_info
         WHERE users_idx = #{userIdx}
     </select>
+    <select id="getGaScoreByUserIdx" resultType="java.lang.Integer">
+        SELECT total_ga_score
+        FROM user_info
+        WHERE users_idx = #{userIdx}
+    </select>
 
 </mapper>

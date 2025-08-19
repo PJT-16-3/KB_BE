@@ -20,5 +20,7 @@ public interface AccountMapper {
 
     void deleteAccountByUserIdx(@Param("userIdx") int userIdx);
 
+    Integer updateFcmToken (@Param("userIdx") int userIdx, @Param("fcmToken") String fcmToken);
+
 }
 

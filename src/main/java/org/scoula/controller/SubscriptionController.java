@@ -11,6 +11,7 @@ import org.scoula.security.util.JwtProcessor;
 import org.scoula.service.AptService;
 import org.scoula.service.HouseService;
 import org.scoula.service.OfficetelService;
+import org.scoula.service.RecentCheckService;
 import org.scoula.util.TokenUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,7 @@ public class SubscriptionController {
     private final TokenUtils tokenUtils;
     private final JwtProcessor jwtProcessor;
     private final UserMapper userMapper;
+    private final RecentCheckService recentCheckService;
 
     @GetMapping("")
     @ApiOperation(
@@ -67,40 +69,55 @@ public class SubscriptionController {
             @ApiResponse(code = 401, message = "인증 실패"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<?> getApartmentDetail(@ApiParam(value = "아파트 공고번호", example = "2025000306", required = true) @RequestParam("pblanc_no") String pblancNo) {
+    public ResponseEntity<?> getApartmentDetail(@ApiParam(hidden = true) @RequestHeader("Authorization") String bearerToken,@ApiParam(value = "아파트 공고번호", example = "2025000306", required = true) @RequestParam("pblanc_no") String pblancNo) {
         try {
+            log.info("📌 getAptDetail 진입 - pblancNo={}, bearerToken={}", pblancNo, bearerToken);
+            String accessToken = tokenUtils.extractAccessToken(bearerToken);
+            String userId = jwtProcessor.getUsername(accessToken);
+            int userIdx = userMapper.findUserIdxByUserId(userId);
+            recentCheckService.insertRecentCheck(userIdx,pblancNo,"APT");
             aptService.incrementAptViewCount(pblancNo);
             AptDetailDTO detail = aptService.getAptDetail(pblancNo);
             return ResponseEntity.ok(detail);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(404).body(Map.of("error", e.getMessage()));
         } catch (Exception e) {
-            log.error("아파트 상세 조회 중 예외 발생", e);
+            log.error("아파트 상세 조회 중 예외 발생합니다", e);
             return ResponseEntity.internalServerError().body(Map.of("error", "아파트 상세 정보를 불러오는 중 오류 발생"));
         }
     }
 
 
     @GetMapping("/officetels/detail")
-    @ApiOperation(value = "오피스텔 청약공고 상세 정보 조회", notes = "pblanc_no(청약공고번호)로 오피스텔 상세 정보를 조회합니다.")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "성공", response = OfficetelDetailDTO.class),
-            @ApiResponse(code = 404, message = "공고를 찾을 수 없음"),
-            @ApiResponse(code = 401, message = "인증 실패"),
-            @ApiResponse(code = 500, message = "서버 오류")
-    })
-    public ResponseEntity<?> getOfficetelDetail(@ApiParam(value = "오피스텔 공고번호", example = "2025950040", required = true)
-                                                    @RequestParam("pblanc_no") String pblancNo) {
+    public ResponseEntity<?> getOfficetelDetail(
+            @ApiParam(hidden = true) @RequestHeader("Authorization") String bearerToken,
+            @ApiParam(value = "오피스텔 공고번호", example = "2025950040", required = true)
+            @RequestParam("pblanc_no") String pblancNo) {
         try {
+            log.info("📌 getOfficetelDetail 진입 - pblancNo={}, bearerToken={}", pblancNo, bearerToken);
+
+            String accessToken = tokenUtils.extractAccessToken(bearerToken);
+            String userId = jwtProcessor.getUsername(accessToken);
+            int userIdx = userMapper.findUserIdxByUserId(userId);
+
+            log.info("📌 토큰 파싱 완료 - accessToken={}, userId={}, userIdx={}", accessToken, userId, userIdx);
+
+            // recent_check 저장
+            log.info("📌 recentCheckService 호출, userIdx={}, pblancNo={}, houseType={}", userIdx, pblancNo, "오피스텔");
+            recentCheckService.insertRecentCheck(userIdx, pblancNo, "오피스텔");
+
             officetelService.incrementOfficeViewCount(pblancNo);
             OfficetelDetailDTO detail = officetelService.getOfficetelDetail(pblancNo);
             return ResponseEntity.ok(detail);
         } catch (IllegalArgumentException e) {
+            log.warn("📌 IllegalArgumentException 발생 - {}", e.getMessage());
             return ResponseEntity.status(404).body(Map.of("error", e.getMessage()));
         } catch (Exception e) {
-            log.error("오피스텔 상세 조회 중 예외 발생", e);
+            log.error("📌 오피스텔 상세 조회 중 예외 발생", e);
             return ResponseEntity.internalServerError().body(Map.of("error", "오피스텔 상세 정보를 불러오는 중 오류 발생"));
         }
     }
+
+
 
 }
