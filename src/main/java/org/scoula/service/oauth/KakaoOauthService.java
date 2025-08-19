@@ -52,7 +52,6 @@ public class KakaoOauthService {
     @Value("${kakao.redirect_url}")
     private String REDIRECT_URL;
 
-
     public AuthResultDTO processKakaoLogin(String code) {
         String accessToken = this.getAccessToken(code);
         KakaoUserInfoDto userInfo = this.getUserInfo(accessToken);
