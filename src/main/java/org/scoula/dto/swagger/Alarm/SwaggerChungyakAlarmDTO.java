@@ -1,9 +1,12 @@
 package org.scoula.dto.swagger.Alarm;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class SwaggerChungyakAlarmDTO {
 
     @ApiModelProperty(value = "알림 제목", example = "청약 접수 시작 알림")
