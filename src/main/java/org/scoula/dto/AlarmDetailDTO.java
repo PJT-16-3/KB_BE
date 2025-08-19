@@ -17,7 +17,6 @@ import java.time.LocalTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class AlarmDetailDTO {
     private Long alarmIdx;
     private AlarmType alarmType;
