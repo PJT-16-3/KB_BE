@@ -38,6 +38,7 @@ jobs:
           rm -f src/main/resources/email.properties
           echo "${{ secrets.APPLICATION_PROPERTIES }}" > src/main/resources/application.properties
           echo "${{ secrets.EMAIL_PROPERTIES }}" > src/main/resources/email.properties
+          echo "${{ secrets.FIREBASE_CREDENTIALS_JSON}}" >src/main/resources/google-services.json
 
       - name: 📢 Gradle 빌드(war 만들기)
         run: ./gradlew clean build
