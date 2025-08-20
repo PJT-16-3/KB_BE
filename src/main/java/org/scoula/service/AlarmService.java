@@ -43,7 +43,7 @@ public class AlarmService {
     public Long createNewNotice(String title, String content, String link,String houseType ,Integer usersIdx) {
         var dto = base(title, content, usersIdx);
         dto.setAlarmType(AlarmType.NEW_NOTICE);
-        dto.setRouting(false);
+        dto.setRouting(true);
         dto.setLink(link); // null 허용
         dto.setHouseType(houseType);
         alarmMapper.insertDetail(dto);

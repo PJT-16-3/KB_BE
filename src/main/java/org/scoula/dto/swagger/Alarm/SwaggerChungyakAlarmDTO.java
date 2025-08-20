@@ -1,9 +1,13 @@
 package org.scoula.dto.swagger.Alarm;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
+
 public class SwaggerChungyakAlarmDTO {
 
     @ApiModelProperty(value = "알림 제목", example = "청약 접수 시작 알림")
@@ -16,5 +20,6 @@ public class SwaggerChungyakAlarmDTO {
     private String link;
 
     @ApiModelProperty(value = "주택 유형", example = "APT or 오피스텔")
+    @JsonProperty("house_type")
     private String houseType;
 }
